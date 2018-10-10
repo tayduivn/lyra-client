@@ -1,0 +1,78 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier", "prettier/react"],
+  "plugins": ["babel", "react", "prettier", "import"],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "globals": {
+    "$": true,
+    "_": true,
+    "get": true,
+    "post": true,
+    "patch": true,
+    "httpDelete": true,
+    "CSRFFetch": true,
+    "trackEvent": true,
+    "algoliasearch": true,
+    "stackshare": true,
+    "Clipboard": true,
+    "sweetAlert": true,
+    "parseGithub": true,
+    "simpleDomainFromUrl": true,
+    "uploadcare": true,
+    "firstBy": true,
+    "places": true,
+    "moment": true,
+    "Drop": true,
+    "stopEvent": true,
+    "trackPage": true,
+    "mina": true
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    },
+    "import/ignore": ["node_modules"]
+  },
+  "rules": {
+    "eqeqeq": ["error", "smart"],
+    "linebreak-style": ["error", "unix"],
+    "no-console": "error",
+    "no-underscore-dangle": "off",
+    "no-unreachable": "error",
+    "no-unused-expressions": ["error", {"allowShortCircuit": true}],
+    "no-unused-vars": "error",
+    "no-var": "error",
+    "prettier/prettier": "error",
+    "react/jsx-no-undef": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/jsx-key": "error",
+    "react/no-did-mount-set-state": "error",
+    "react/no-did-update-set-state": "error",
+    "react/no-direct-mutation-state": "error",
+    "react/no-find-dom-node": "error",
+    "react/no-is-mounted": "error",
+    "react/no-redundant-should-component-update": "error",
+    "react/no-unknown-property": "error",
+    "react/no-string-refs": "error",
+    "react/no-unused-prop-types": "error",
+    "react/no-will-update-set-state": "error",
+    "react/require-render-return": "error",
+    "react/void-dom-elements-no-children": "error",
+    "react/no-typos": "error",
+    "react/prop-types": "error",
+    "react/react-in-jsx-scope": "error",
+    "react/self-closing-comp": "error",
+    "import/no-unresolved": "error"
+  }
+}

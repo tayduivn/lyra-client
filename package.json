@@ -1,0 +1,36 @@
+{
+  "name": "with-apollo",
+  "version": "2.0.0",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "apollo-boost": "^0.1.16",
+    "babel-plugin-emotion": "^9.2.10",
+    "emotion": "^9.2.10",
+    "emotion-server": "^9.2.10",
+    "graphql": "^14.0.2",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^7.0.0",
+    "prettier": "^1.14.3",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-apollo": "^2.1.11",
+    "react-dom": "^16.5.2",
+    "react-emotion": "^9.2.10",
+    "react-popper": "^1.0.2"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.6.1",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-babel": "^5.2.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1"
+  }
+}
