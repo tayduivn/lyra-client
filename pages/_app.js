@@ -1,3 +1,4 @@
+import 'normalize.css';
 import App, {Container} from 'next/app';
 import Page from '../components/Page';
 import withApolloClient from '../lib/with-apollo-client';

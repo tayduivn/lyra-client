@@ -5,7 +5,10 @@ import {ThemeProvider} from 'emotion-theming';
 import Header from './Header';
 
 const theme = {
-  alabaster: '#f9f9f9'
+  alabaster: '#f9f9f9',
+  lilac: '#e8e8e8',
+  white: '#fff',
+  black: '#000'
 };
 
 // const StyledPage = styled.div`
