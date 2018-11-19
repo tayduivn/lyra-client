@@ -35,10 +35,14 @@ injectGlobal`
 
 export default class Page extends Component {
   render() {
+    console.log('this.props', this.props);
     return (
       <ThemeProvider theme={theme}>
         <StyledPage>
           <Header />
+          <br />
+          <a onClick={this.props.auth.login}>Login</a>
+          <br />
           <div>{this.props.children}</div>
         </StyledPage>
       </ThemeProvider>
