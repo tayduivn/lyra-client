@@ -25,7 +25,7 @@ class MyApp extends App {
       <Container>
         <ApolloProvider client={apolloClient}>
           <Page auth={auth}>
-            <Component {...pageProps} />
+            <Component {...pageProps} name="coolguy" />
           </Page>
         </ApolloProvider>
       </Container>

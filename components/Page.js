@@ -33,15 +33,24 @@ injectGlobal`
   }
 `;
 
+import {show} from '../lib/utils/lock';
+const CONTAINER_ID = 'put-lock-here';
+
 export default class Page extends Component {
+  // componentDidMount() {
+  //   show(CONTAINER_ID);
+  // }
+
   render() {
     console.log('this.props', this.props);
     return (
       <ThemeProvider theme={theme}>
         <StyledPage>
           <Header />
+          <div id={CONTAINER_ID} />
           <br />
-          <a onClick={this.props.auth.login}>Login</a>
+          {/* <a onClick={this.props.auth.login}>Login BLAH BLAHG</a> */}
+          <a onClick={() => show()}>Login BLAH BLAHG</a>
           <br />
           <div>{this.props.children}</div>
         </StyledPage>

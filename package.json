@@ -17,6 +17,8 @@
     "express": "^4.16.4",
     "graphql": "^14.0.2",
     "isomorphic-unfetch": "^3.0.0",
+    "js-cookie": "^2.2.0",
+    "jwt-decode": "^2.2.0",
     "next": "^7.0.0",
     "next-routes": "^1.4.2",
     "normalize.css": "^8.0.0",
@@ -26,7 +28,8 @@
     "react-apollo": "^2.1.11",
     "react-dom": "^16.5.2",
     "react-emotion": "^9.2.10",
-    "react-popper": "^1.0.2"
+    "react-popper": "^1.0.2",
+    "uuid": "^3.3.2"
   },
   "author": "",
   "license": "ISC",

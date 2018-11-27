@@ -29,11 +29,9 @@ export const productsQueryVars = {
   skip: 0
 };
 
-export default () => (
+const Home = props => (
   <App>
-    {/* <Header />
-    <Submit />
-    <PostList /> */}
+    {props.name}
     <Query query={productsQuery} variables={productsQueryVars}>
       {({loading, error, data: {products, _productsMeta}, fetchMore}) => {
         if (loading) return <div>Loading</div>;
@@ -90,6 +88,8 @@ const FEED_QUERY = gql`
     }
   }
 `;
+
+export default Home;
 //
 // const FeedData = ({ match }) => (
 //   <Query
