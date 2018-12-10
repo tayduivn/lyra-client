@@ -1,77 +1,77 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "react-emotion";
-import { BASE_TEXT } from "../../shared/style/typography";
-import { GUNSMOKE, LILAC, WHITE } from "../../shared/style/colors";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import styled from 'react-emotion';
+import {BASE_TEXT} from '../../shared/style/typography';
+import {GUNSMOKE, LILAC, WHITE} from '../../shared/style/colors';
 // import {Manager, Target, Popper, Arrow} from 'react-popper';
-import { Manager, Reference, Popper } from "react-popper";
-import Tag from "./tag";
+import {Manager, Reference, Popper} from 'react-popper';
+import Tag from './tag';
 
-const Container = styled("div")({
-  display: "flex",
-  flexDirection: "row"
+const Container = styled('div')({
+  display: 'flex',
+  flexDirection: 'row'
 });
 
-const Count = styled("a")({
+const Count = styled('a')({
   ...BASE_TEXT,
-  display: "flex",
-  alignItems: "center",
+  display: 'flex',
+  alignItems: 'center',
   marginLeft: 4,
   fontSize: 11,
-  lineHeight: "16px",
+  lineHeight: '16px',
   color: GUNSMOKE,
-  cursor: "pointer",
-  "&:hover": {
-    textDecoration: "underline"
+  cursor: 'pointer',
+  '&:hover': {
+    textDecoration: 'underline'
   }
 });
 
-const Tags = styled("ul")({
+const Tags = styled('ul')({
   margin: 15,
   padding: 0,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  "> div": {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  '> div': {
     marginTop: 15
   },
-  "> div:first-child": {
+  '> div:first-child': {
     marginTop: 0
   }
 });
 
-const Content = styled("div")({
+const Content = styled('div')({
   border: `1px solid ${LILAC}`,
   backgroundColor: WHITE,
   // marginTop: 15,
-  "&::before": {
+  '&::before': {
     borderWidth: 11,
     content: '""',
-    position: "absolute",
-    left: "50%",
+    position: 'absolute',
+    left: '50%',
     marginLeft: -11,
     width: 0,
     height: 0,
-    border: "solid transparent"
+    border: 'solid transparent'
   },
-  "&::after": {
+  '&::after': {
     borderWidth: 10,
     content: '""',
-    position: "absolute",
+    position: 'absolute',
     marginLeft: -10,
-    left: "50%",
+    left: '50%',
     width: 0,
     height: 0,
-    border: "solid transparent"
+    border: 'solid transparent'
   },
   "&[data-placement*='bottom']": {
     marginTop: 15,
-    "&::before": {
+    '&::before': {
       top: -6,
       borderWidth: 11,
       borderColor: `transparent transparent ${LILAC} transparent`
     },
-    "&::after": {
+    '&::after': {
       top: -3,
       borderWidth: 10,
       borderColor: `transparent transparent ${WHITE} transparent`
@@ -79,12 +79,12 @@ const Content = styled("div")({
   },
   "&[data-placement*='top']": {
     marginTop: -15,
-    "&::before": {
+    '&::before': {
       bottom: -21,
       borderWidth: 11,
       borderColor: `${LILAC} transparent transparent transparent`
     },
-    "&::after": {
+    '&::after': {
       bottom: -18,
       borderWidth: 10,
       borderColor: `${WHITE} transparent transparent transparent`
@@ -92,11 +92,11 @@ const Content = styled("div")({
   }
 });
 
-const Arrow = styled("div")`
+const Arrow = styled('div')`
   position: absolute;
   width: 3em;
   height: 3em;
-  &[data-placement*="bottom"] {
+  &[data-placement*='bottom'] {
     top: 0;
     left: 0;
     margin-top: -0.9em;
@@ -111,7 +111,7 @@ const Arrow = styled("div")`
       border-color: transparent transparent #fff transparent;
     }
   }
-  &[data-placement*="top"] {
+  &[data-placement*='top'] {
     top: 0;
     left: 0;
     margin-bottom: -0.9em;
@@ -126,7 +126,7 @@ const Arrow = styled("div")`
       border-color: transparent transparent #fff transparent;
     }
   }
-  ${"" /* &[data-placement*='top'] {
+  ${'' /* &[data-placement*='top'] {
     bottom: 0;
     left: 0;
     margin-bottom: -0.9em;
@@ -146,7 +146,7 @@ const Arrow = styled("div")`
       border-color: transparent #232323 transparent transparent;
     }
   }
-  &[data-placement*="left"] {
+  &[data-placement*='left'] {
     right: 0;
     margin-right: -0.9em;
     height: 3em;
@@ -157,7 +157,7 @@ const Arrow = styled("div")`
     }
   }
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     left: 50%;
     margin-left: -11px;
@@ -166,7 +166,7 @@ const Arrow = styled("div")`
     border: solid transparent;
   }
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     margin-left: -10px;
     left: 50%;
@@ -189,7 +189,7 @@ export default class TagList extends Component {
   }
 
   handleClick = () => {
-    this.setState({ isOpen: !this.state.isOpen });
+    this.setState({isOpen: !this.state.isOpen});
     // this.setState(prevState => ({
     //   isOpen: !prevState.isOpen
     // }));
@@ -208,8 +208,8 @@ export default class TagList extends Component {
   // }}
 
   render() {
-    const { tags } = this.props;
-    console.log(tags);
+    const {tags} = this.props;
+    // console.log(tags);
     const items = tags.map(tag => <Tag name={tag.name} url={tag.url} />);
     return (
       <Container>
@@ -217,7 +217,7 @@ export default class TagList extends Component {
         <Manager>
           <Count>
             <Reference>
-              {({ ref }) => (
+              {({ref}) => (
                 <div ref={ref} onClick={this.handleClick}>
                   + {tags.length - 1}
                 </div>
@@ -226,7 +226,7 @@ export default class TagList extends Component {
           </Count>
           {this.state.isOpen && (
             <Popper placement="top">
-              {({ ref, style, placement, arrowProps }) => (
+              {({ref, style, placement, arrowProps}) => (
                 <div ref={ref} style={style} data-placement={placement}>
                   {/* <Arrow
                     innerRef={arrowProps.ref}

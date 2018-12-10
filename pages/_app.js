@@ -1,31 +1,29 @@
-import 'normalize.css';
-import App, {Container} from 'next/app';
+import App, { Container } from 'next/app';
+import React from 'react';
+import { ApolloProvider } from 'react-apollo';
+import withApollo from '../lib/with-apollo';
 import Page from '../components/Page';
-import withApolloClient from '../lib/with-apollo-client';
-import {ApolloProvider} from 'react-apollo';
-import Auth from '../lib/auth/auth';
 
 class MyApp extends App {
-  componentDidMount() {
-    // const isClient = typeof window !== 'undefined';
-    // if (isClient) {
-    //   debugger;
+  // static async getInitialProps({ Component, ctx }) {
+  static async getInitialProps(ctx) {
+    console.log('ctxbro', ctx);
+    // console.log()
+    // let pageProps = {};
+    // if (Component.getInitialProps) {
+    //   pageProps = await Component.getInitialProps(ctx);
     // }
+    // // this exposes the query to the user
+    // pageProps.query = ctx.query;
+    // return { pageProps };
   }
-
   render() {
-    // const isClient = typeof window !== 'undefined';
-    // if (isClient) {
-    //   debugger;
-    // }
-    const auth = new Auth(result => console.log('auth result', result), this.props.apolloClient);
-    console.log('component did mount!', auth);
-    const {Component, pageProps, apolloClient} = this.props;
+    const { Component, pageProps, apolloClient } = this.props;
     return (
       <Container>
         <ApolloProvider client={apolloClient}>
-          <Page auth={auth}>
-            <Component {...pageProps} name="coolguy" />
+          <Page>
+            <Component {...pageProps} client={apolloClient} />
           </Page>
         </ApolloProvider>
       </Container>
@@ -33,4 +31,4 @@ class MyApp extends App {
   }
 }
 
-export default withApolloClient(MyApp);
+export default withApollo(MyApp);
