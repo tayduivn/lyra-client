@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'react-emotion';
-import {BASE_TEXT} from '../../shared/style/typography';
-import {BLACK, GUNSMOKE, LILAC} from '../../shared/style/colors';
+import { BASE_TEXT } from '../../shared/style/typography';
+import { BLACK, GUNSMOKE, LILAC } from '../../shared/style/colors';
 import TagList from './tag-list.jsx';
 
 const Container = styled('li')({
@@ -55,7 +55,7 @@ export default class ProductCard extends Component {
   };
 
   render() {
-    const {name, description, imageUrl, tags} = this.props;
+    const { name, description, imageUrl, tags } = this.props;
     return (
       <Container>
         <Link>

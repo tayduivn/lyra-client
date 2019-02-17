@@ -4,7 +4,7 @@ const LRUCache = require('lru-cache');
 const routes = require('./routes');
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({dev});
+const app = next({ dev });
 const handle = app.getRequestHandler();
 
 // This is where we cache our rendered HTML pages
@@ -56,7 +56,7 @@ function renderAndCache(req, res) {
   }
 
   // Match route + parse params
-  const {route, params} = routes.match(req.url);
+  const { route, params } = routes.match(req.url);
   if (!route) return handle(req, res);
 
   app

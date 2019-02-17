@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import styled, {injectGlobal} from 'react-emotion';
+import React, { Component } from 'react';
+import styled, { injectGlobal } from 'react-emotion';
 // import {injectGlobal} from 'emotion';
-import {ThemeProvider} from 'emotion-theming';
-import Header from './Header';
+import { ThemeProvider } from 'emotion-theming';
+import Header from './header';
 
 const theme = {
   alabaster: '#f9f9f9',
@@ -27,13 +27,15 @@ const Inner = styled('div')({
   margin: '0 auto'
 });
 
+// TODO: Remove margin override and use CSS reset (normalize)
 injectGlobal`
   body {
-    background-color: ${theme.alabaster}
+    background-color: ${theme.alabaster};
+    margin: 0;
   }
 `;
 
-import {show} from '../lib/utils/lock';
+import { show } from '../lib/utils/lock';
 
 export default class Page extends Component {
   render() {

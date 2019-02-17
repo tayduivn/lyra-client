@@ -1,16 +1,16 @@
 export const FONT_FAMILY =
-  "-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif";
+  '-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif';
 
 export const WEIGHT = {
-  ULTRA_THIN: "100",
-  THIN: "200",
-  LITE: "300",
-  NORMAL: "400",
-  DARK: "500",
-  BOLD: "600",
-  ULTRA_BOLD: "700",
-  BLACK: "800",
-  ULTRA_BLACK: "900"
+  ULTRA_THIN: '100',
+  THIN: '200',
+  LITE: '300',
+  NORMAL: '400',
+  DARK: '500',
+  BOLD: '600',
+  ULTRA_BOLD: '700',
+  BLACK: '800',
+  ULTRA_BLACK: '900'
 };
 
 export const BASE_TEXT = {
@@ -18,6 +18,6 @@ export const BASE_TEXT = {
   fontWeight: WEIGHT.NORMAL,
   fontSize: 13,
   lineHeight: 1.4,
-  letterSpacing: "normal",
-  WebkitFontSmoothing: "antialiased"
+  letterSpacing: 'normal',
+  WebkitFontSmoothing: 'antialiased'
 };
