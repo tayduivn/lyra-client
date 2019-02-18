@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'react-emotion';
-import {BASE_TEXT} from '../../shared/style/typography';
-import {GUNSMOKE, LILAC, WHITE} from '../../shared/style/colors';
+import styled from '@emotion/styled';
+import { BASE_TEXT } from '../../shared/style/typography';
+import { GUNSMOKE, LILAC, WHITE } from '../../shared/style/colors';
 // import {Manager, Target, Popper, Arrow} from 'react-popper';
-import {Manager, Reference, Popper} from 'react-popper';
+import { Manager, Reference, Popper } from 'react-popper';
 import Tag from './tag';
 
 const Container = styled('div')({
@@ -189,7 +189,7 @@ export default class TagList extends Component {
   }
 
   handleClick = () => {
-    this.setState({isOpen: !this.state.isOpen});
+    this.setState({ isOpen: !this.state.isOpen });
     // this.setState(prevState => ({
     //   isOpen: !prevState.isOpen
     // }));
@@ -208,7 +208,7 @@ export default class TagList extends Component {
   // }}
 
   render() {
-    const {tags} = this.props;
+    const { tags } = this.props;
     // console.log(tags);
     const items = tags.map(tag => <Tag name={tag.name} url={tag.url} />);
     return (
@@ -217,7 +217,7 @@ export default class TagList extends Component {
         <Manager>
           <Count>
             <Reference>
-              {({ref}) => (
+              {({ ref }) => (
                 <div ref={ref} onClick={this.handleClick}>
                   + {tags.length - 1}
                 </div>
@@ -226,7 +226,7 @@ export default class TagList extends Component {
           </Count>
           {this.state.isOpen && (
             <Popper placement="top">
-              {({ref, style, placement, arrowProps}) => (
+              {({ ref, style, placement, arrowProps }) => (
                 <div ref={ref} style={style} data-placement={placement}>
                   {/* <Arrow
                     innerRef={arrowProps.ref}

@@ -1,13 +1,14 @@
 import App, { Container } from 'next/app';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
-import withApollo from '../lib/with-apollo';
+import withApollo from '../lib/with-apollo-old';
+// import withApolloClient from '../lib/with-apollo-client';
 import Page from '../components/Page';
 
 class MyApp extends App {
   // static async getInitialProps({ Component, ctx }) {
   static async getInitialProps(ctx) {
-    console.log('ctxbro', ctx);
+    // console.log('ctxbro', ctx);s
     // console.log()
     // let pageProps = {};
     // if (Component.getInitialProps) {

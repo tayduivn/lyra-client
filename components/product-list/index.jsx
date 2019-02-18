@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'react-emotion';
-import {LILAC, ALABASTER} from '../../shared/style/colors';
-import {BASE_TEXT, WEIGHT} from '../../shared/style/typography';
+import styled from '@emotion/styled';
+import { LILAC, ALABASTER } from '../../shared/style/colors';
+import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import ProductCard from '../product-card';
 
 const Container = styled('div')({
@@ -57,7 +57,7 @@ export default class ProductList extends Component {
   };
 
   render() {
-    const {products} = this.props;
+    const { products } = this.props;
     return (
       <Container>
         <Header>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import gql from 'graphql-tag';
-import withApollo from '../../lib/with-apollo';
+import withApollo from '../../lib/with-apollo-old';
 import {
   setToken,
   checkSecret,

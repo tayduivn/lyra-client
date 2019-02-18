@@ -1,10 +1,9 @@
 /* eslint class-methods-use-this: 0 */ // --> OFF
-
 import React from 'react';
-import { ApolloConsumer } from 'react-apollo';
-import ProductCard from '../components/product-card';
-import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import ProductCard from '../components/product-card';
+import styled from '@emotion/styled';
 
 const productsQuery = gql`
   query products($first: Int!, $skip: Int!) {
@@ -28,6 +27,21 @@ export const productsQueryVars = {
   skip: 0
 };
 
+const Container = styled('div')({
+  margin: 'auto',
+  maxWidth: 1100,
+  minWidth: 320,
+  display: 'flex'
+});
+
+const Main = styled('main')({
+  flex: 1
+});
+
+const Aside = styled('aside')({
+  width: 330
+});
+
 export default class Index extends React.Component {
   static async getInitialProps(context, apolloClient) {
     return {};
@@ -35,48 +49,59 @@ export default class Index extends React.Component {
 
   render() {
     return (
-      <Query query={productsQuery} variables={productsQueryVars}>
-        {({ loading, error, data: { products, _productsMeta }, fetchMore }) => {
-          if (loading) return <div>Loading</div>;
-          return (
-            <div>
-              <pre>{products.toString()}</pre>
-              {products.map(product => {
-                return (
-                  <ProductCard
-                    key={product.id}
-                    name={product.name}
-                    description={product.description}
-                    imageUrl={product.imageUrl}
-                    tags={product.topics}
-                  />
-                );
-              })}
-              <a
-                onClick={() =>
-                  fetchMore({
-                    variables: {
-                      skip: products.length,
-                      first: 5
-                    },
-                    updateQuery: (prev, { fetchMoreResult }) => {
-                      if (!fetchMoreResult) return prev;
-                      return Object.assign({}, prev, {
-                        products: [
-                          ...prev.products,
-                          ...fetchMoreResult.products
-                        ]
-                      });
+      <Container>
+        <Main>
+          <Query query={productsQuery} variables={productsQueryVars}>
+            {({
+              loading,
+              error,
+              data: { products, _productsMeta },
+              fetchMore
+            }) => {
+              // if (error) return <div>error</div>;
+              if (loading) return <div>Loading</div>;
+              return (
+                <div>
+                  {/* <pre>{products.toString()}</pre> */}
+                  {products.map(product => {
+                    return (
+                      <ProductCard
+                        key={product.id}
+                        name={product.name}
+                        description={product.description}
+                        imageUrl={product.imageUrl}
+                        tags={product.topics}
+                      />
+                    );
+                  })}
+                  <a
+                    onClick={() =>
+                      fetchMore({
+                        variables: {
+                          skip: products.length,
+                          first: 5
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                          if (!fetchMoreResult) return prev;
+                          return Object.assign({}, prev, {
+                            products: [
+                              ...prev.products,
+                              ...fetchMoreResult.products
+                            ]
+                          });
+                        }
+                      })
                     }
-                  })
-                }
-              >
-                Load More
-              </a>
-            </div>
-          );
-        }}
-      </Query>
+                  >
+                    Load More
+                  </a>
+                </div>
+              );
+            }}
+          </Query>
+        </Main>
+        <Aside>Side Panel</Aside>
+      </Container>
     );
   }
 }

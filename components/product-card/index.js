@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import { BASE_TEXT } from '../../shared/style/typography';
 import { BLACK, GUNSMOKE, LILAC } from '../../shared/style/colors';
 import TagList from './tag-list.jsx';
