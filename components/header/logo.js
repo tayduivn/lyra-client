@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import { WHITE, LAVENDER } from '../../shared/style/colors';
 

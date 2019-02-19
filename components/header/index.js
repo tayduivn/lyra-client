@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 import Link from 'next/link';
 import { withRouter } from 'next/router';
 import User from '../user.jsx';

@@ -1,4 +1,5 @@
 {
   "presets": ["next/babel"],
-  "plugins": [["emotion", {"inline": true}]]
+  "plugins": ["emotion"]
+  // "plugins": [["emotion", {"inline": true}]]
 }
