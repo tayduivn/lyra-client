@@ -18,7 +18,7 @@
     "auth0-lock": "^11.11.0",
     "cookie": "^0.3.1",
     "emotion-server": "^9.2.10",
-    "emotion-theming": "^9.2.9",
+    "emotion-theming": "^10.0.7",
     "eslint-plugin-emotion": "^10.0.7",
     "express": "^4.16.4",
     "graphql": "^14.0.2",
