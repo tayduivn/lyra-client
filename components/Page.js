@@ -5,12 +5,14 @@ import { Global, css } from '@emotion/core';
 import { ThemeProvider } from 'emotion-theming';
 import Header from './header';
 
-const theme = {
-  alabaster: '#f9f9f9',
-  riceCake: '#f3f3f3',
-  lilac: '#e8e8e8',
-  white: '#fff',
-  black: '#000'
+const THEME = {
+  COLORS: {
+    ALABASTER: '#f9f9f9',
+    RICE_CAKE: '#f3f3f3',
+    LILAC: '#e8e8e8',
+    WHITE: '#fff',
+    BLACK: '#000'
+  }
 };
 
 const StyledPage = styled('div')({});
@@ -28,12 +30,12 @@ import { show } from '../lib/utils/lock';
 export default class Page extends Component {
   render() {
     return (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={THEME}>
         <StyledPage>
           <Global
             styles={css`
               body {
-                background-color: ${theme.riceCake};
+                background-color: ${THEME.COLORS.RICE_CAKE};
                 margin: 0;
               }
             `}
