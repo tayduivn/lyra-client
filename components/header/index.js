@@ -15,6 +15,12 @@ const Wrapper = styled('div')(({ theme: { COLORS: { WHITE, LILAC } } }) => ({
   boxShadow: '0 1px 1px 0 rgba(0,0,0,.05)'
 }));
 
+// const Wrapper = styled('div')(({ theme: { COLORS: { WHITE, LILAC } } }) => ({
+//   backgroundColor: WHITE,
+//   borderBottom: `1px solid ${LILAC}`,
+//   boxShadow: '0 1px 1px 0 rgba(0,0,0,.05)'
+// }));
+
 const Container = styled.div`
   max-width: 1100px;
   display: flex;
@@ -24,8 +30,8 @@ const Container = styled.div`
   margin: auto;
 `;
 
-const Header = ({ router: { pathname } }) => (
-  <Wrapper>
+const Header = ({ theme, router: { pathname } }) => (
+  <Wrapper theme={theme}>
     <Container>
       <Logo />
       <PlusIcon />
