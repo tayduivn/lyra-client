@@ -5,6 +5,7 @@ import { withRouter } from 'next/router';
 import User from '../user.jsx';
 import Logo from './logo';
 import Avatar from './avatar';
+import PlusIcon from './icons/plus.svg';
 
 const Wrapper = styled.header`
   background-color: ${props => props.theme.white};
@@ -24,6 +25,7 @@ const Header = ({ router: { pathname } }) => (
   <Wrapper>
     <Container>
       <Logo />
+      <PlusIcon />
       <User>
         {({ data: { me } }) => (
           <React.Fragment>{me && <Avatar avatar={me.avatar} />}</React.Fragment>
