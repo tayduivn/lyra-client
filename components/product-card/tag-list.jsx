@@ -43,53 +43,65 @@ const Tags = styled('ul')({
 const Content = styled('div')({
   border: `1px solid ${LILAC}`,
   backgroundColor: WHITE,
-  // marginTop: 15,
-  '&::before': {
-    borderWidth: 11,
-    content: '""',
-    position: 'absolute',
-    left: '50%',
-    marginLeft: -11,
-    width: 0,
-    height: 0,
-    border: 'solid transparent'
+  "&[data-placement*='top']": {
+    marginBottom: 10
   },
-  '&::after': {
-    borderWidth: 10,
-    content: '""',
-    position: 'absolute',
-    marginLeft: -10,
-    left: '50%',
-    width: 0,
-    height: 0,
-    border: 'solid transparent'
+  "&[data-placement*='right']": {
+    marginLeft: 10
   },
   "&[data-placement*='bottom']": {
-    marginTop: 15,
-    '&::before': {
-      top: -6,
-      borderWidth: 11,
-      borderColor: `transparent transparent ${LILAC} transparent`
-    },
-    '&::after': {
-      top: -3,
-      borderWidth: 10,
-      borderColor: `transparent transparent ${WHITE} transparent`
-    }
+    marginTop: 10
   },
-  "&[data-placement*='top']": {
-    marginTop: -15,
-    '&::before': {
-      bottom: -21,
-      borderWidth: 11,
-      borderColor: `${LILAC} transparent transparent transparent`
-    },
-    '&::after': {
-      bottom: -18,
-      borderWidth: 10,
-      borderColor: `${WHITE} transparent transparent transparent`
-    }
+  "&[data-placement*='left']": {
+    marginRight: 10
   }
+  // marginTop: 15,
+  // '&::before': {
+  //   borderWidth: 11,
+  //   content: '""',
+  //   position: 'absolute',
+  //   left: '50%',
+  //   marginLeft: -11,
+  //   width: 0,
+  //   height: 0,
+  //   border: 'solid transparent'
+  // },
+  // '&::after': {
+  //   borderWidth: 10,
+  //   content: '""',
+  //   position: 'absolute',
+  //   marginLeft: -10,
+  //   left: '50%',
+  //   width: 0,
+  //   height: 0,
+  //   border: 'solid transparent'
+  // },
+  // "&[data-placement*='bottom']": {
+  //   marginTop: 15,
+  //   '&::before': {
+  //     top: -6,
+  //     borderWidth: 11,
+  //     borderColor: `transparent transparent ${LILAC} transparent`
+  //   },
+  //   '&::after': {
+  //     top: -3,
+  //     borderWidth: 10,
+  //     borderColor: `transparent transparent ${WHITE} transparent`
+  //   }
+  // },
+  // "&[data-placement*='top']": {
+  //   marginTop: -15,
+  //   '&::before': {
+  //     bottom: -21,
+  //     borderWidth: 11,
+  //     borderColor: `${LILAC} transparent transparent transparent`
+  //   },
+  //   '&::after': {
+  //     bottom: -18,
+  //     borderWidth: 10,
+  //     borderColor: `${WHITE} transparent transparent transparent`
+  //   }
+  // }
 });
 
 const Arrow = styled('div')`
@@ -103,47 +115,29 @@ const Arrow = styled('div')`
     width: 3em;
     height: 1em;
     &::before {
-      border-width: 11px;
-      border-color: transparent transparent #e8e8e8 transparent;
-    }
-    &::after {
-      border-width: 10px;
-      border-color: transparent transparent #fff transparent;
+      border-width: 0 10px 10px 10px;
+      border-color: transparent transparent ${LILAC} transparent;
     }
   }
   &[data-placement*='top'] {
-    top: 0;
-    left: 0;
-    margin-bottom: -0.9em;
-    width: 3em;
-    height: 1em;
-    &::before {
-      border-width: 11px;
-      border-color: transparent transparent #e8e8e8 transparent;
-    }
-    &::after {
-      border-width: 10px;
-      border-color: transparent transparent #fff transparent;
-    }
-  }
-  ${'' /* &[data-placement*='top'] {
     bottom: 0;
     left: 0;
     margin-bottom: -0.9em;
     width: 3em;
     height: 1em;
     &::before {
-      border-width: 1em 1.5em 0 1.5em;
-      border-color: #232323 transparent transparent transparent;
+      border-width: 10px 10px 0 10px;
+      border-color: ${LILAC} transparent transparent transparent;
     }
-  } */} &[data-placement*='right'] {
+  }
+  &[data-placement*='right'] {
     left: 0;
     margin-left: -0.9em;
-    height: 3em;
-    width: 1em;
+    height: 1.5em;
+    width: 0.5em;
     &::before {
-      border-width: 1.5em 1em 1.5em 0;
-      border-color: transparent #232323 transparent transparent;
+      border-width: 10px 10px 10px 0;
+      border-color: transparent ${LILAC} transparent transparent;
     }
   }
   &[data-placement*='left'] {
@@ -152,29 +146,33 @@ const Arrow = styled('div')`
     height: 3em;
     width: 1em;
     &::before {
-      border-width: 1.5em 0 1.5em 1em;
-      border-color: transparent transparent transparent#232323;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent ${LILAC};
     }
   }
   &::before {
     content: '';
-    position: absolute;
-    left: 50%;
-    margin-left: -11px;
+    margin: auto;
+    display: block;
     width: 0;
     height: 0;
-    border: solid transparent;
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    margin-left: -10px;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border: solid transparent;
+    border-style: solid;
   }
 `;
+
+const TOP = 'top';
+const RIGHT = 'right';
+const BOTTOM = 'bottom';
+const LEFT = 'left';
+const OFFSET = 20;
+const OFFSETS = new Map();
+OFFSETS.set(TOP, BOTTOM);
+OFFSETS.set(RIGHT, LEFT);
+OFFSETS.forEach((value, key) => {
+  OFFSETS.set(value, key);
+});
+
+// const OFFSETS = { `${TOP}`: BOTTOM, RIGHT: LEFT, BOTTOM: TOP, LEFT: RIGHT };
 
 export default class TagList extends Component {
   static propTypes = {
@@ -190,6 +188,7 @@ export default class TagList extends Component {
 
   handleClick = () => {
     this.setState({ isOpen: !this.state.isOpen });
+    this.addOutsideClickHandler();
     // this.setState(prevState => ({
     //   isOpen: !prevState.isOpen
     // }));
@@ -207,44 +206,122 @@ export default class TagList extends Component {
   //   transformOrigin: 'top center',
   // }}
 
+  handleOutsideClick = event => {
+    if (!this.container.contains(event.target)) {
+      this.setState({ isOpen: false });
+      this.removeOutsideClickHandler();
+    }
+  };
+
+  addOutsideClickHandler = () => {
+    document.addEventListener('click', this.handleOutsideClick);
+  };
+
+  removeOutsideClickHandler = () => {
+    document.removeEventListener('click', this.handleOutsideClick);
+  };
+
+  container = null;
+
+  assignContainer = el => (this.container = el);
+
   render() {
     const { tags } = this.props;
-    // console.log(tags);
     const items = tags.map(tag => <Tag name={tag.name} url={tag.url} />);
     return (
-      <Container>
-        <Tag name={tags[0].name} />
+      <Container ref={this.assignContainer}>
         <Manager>
+          {/* <Reference>
+            {({ ref }) => (
+              <button type="button" ref={ref}>
+                Reference element
+              </button>
+            )}
+          </Reference> */}
           <Count>
             <Reference>
               {({ ref }) => (
-                <div ref={ref} onClick={this.handleClick}>
+                <div ref={ref} onClick={() => this.handleClick()}>
                   + {tags.length - 1}
                 </div>
               )}
             </Reference>
           </Count>
           {this.state.isOpen && (
-            <Popper placement="top">
-              {({ ref, style, placement, arrowProps }) => (
-                <div ref={ref} style={style} data-placement={placement}>
-                  {/* <Arrow
-                    innerRef={arrowProps.ref}
-                    data-placement={placement}
-                    style={arrowProps.style}
-                  /> */}
-                  {/* <Content data-placement={placement}> */}
-                  <Content data-placement={placement}>
-                    <Tags>{items}</Tags>
-                  </Content>
+            <Popper
+              placement="auto"
+              modifiers={{
+                addMargin: {
+                  order: 1,
+                  enabled: true,
+                  function: data => {
+                    const {
+                      placement,
+                      offsets: { popper }
+                    } = data;
+                    popper[OFFSETS.get(placement)] += OFFSET;
 
-                  {/* <div ref={arrowProps.ref} style={arrowProps.style} /> */}
-                </div>
-              )}
+                    data.offsets.popper = popper;
+                    return data;
+                  }
+                }
+                // offset: { enabled: true, offset: '100%w' }
+              }}
+            >
+              {({ ref, style, placement, arrowProps }) => {
+                // console.log('cool guy', ref);
+                return (
+                  <div ref={ref} style={style} data-placement={placement}>
+                    {/* Popper element */}
+                    <Arrow
+                      innerRef={arrowProps.ref}
+                      data-placement={placement}
+                      style={arrowProps.style}
+                    />
+                    <Content>
+                      <Tags>{items}</Tags>
+                    </Content>
+                    {/* <div ref={arrowProps.ref} style={arrowProps.style} /> */}
+                  </div>
+                );
+              }}
             </Popper>
           )}
         </Manager>
       </Container>
     );
   }
+
+  // render() {
+  //   const { tags } = this.props;
+  //   // console.log(tags);
+  //   const items = tags.map(tag => <Tag name={tag.name} url={tag.url} />);
+  //   return (
+  //     <Container>
+  //       <Tag name={tags[0].name} />
+  //       <Manager>
+
+  //         {this.state.isOpen && (
+  //           <Popper placement="top">
+  //             {({ ref, style, placement, arrowProps }) => (
+  //               <div ref={ref} style={style} data-placement={placement}>
+  //                 {/* <Arrow
+  //                   innerRef={arrowProps.ref}
+  //                   data-placement={placement}
+  //                   style={arrowProps.style}
+  //                 /> */}
+  //                 {/* <Content data-placement={placement}> */}
+  //                 <Content data-placement={placement}>
+  // <Tags>{items}</Tags>
+  //                 </Content>
+
+  //                 {/* <div ref={arrowProps.ref} style={arrowProps.style} /> */}
+  //               </div>
+  //             )}
+  //           </Popper>
+  //         )}
+  //       </Manager>
+  //     </Container>
+  //   );
+  // }
 }

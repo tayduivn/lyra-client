@@ -61,6 +61,7 @@ export default class Tag extends Component {
     url: PropTypes.string,
     onClick: PropTypes.func
   };
+
   render() {
     const { name, url, onClick } = this.props;
     return (

@@ -1,6 +1,6 @@
-const nextRoutes = require('next-routes');
-const routes = (module.exports = nextRoutes());
+const routes = require('next-routes');
 
-routes.add('index', '/luke');
-routes.add('blog', '/blog/:slug');
-routes.add('about', '/about-us/:foo(bar|baz)');
+module.exports = routes()
+  .add('index')
+  .add('new-post', '/posts/new', '/posts/new')
+  .add('about', '/about-us/:foo(bar|baz)');

@@ -2,8 +2,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import ProductCard from '../components/product-card';
 import styled from '@emotion/styled';
+import ProductCard from '../components/product-card';
 
 const productsQuery = gql`
   query products($first: Int!, $skip: Int!) {

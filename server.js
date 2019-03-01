@@ -57,6 +57,7 @@ function renderAndCache(req, res) {
 
   // Match route + parse params
   const { route, params } = routes.match(req.url);
+  console.log('route', route);
   if (!route) return handle(req, res);
 
   app
