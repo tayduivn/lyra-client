@@ -42,66 +42,7 @@ const Tags = styled('ul')({
 
 const Content = styled('div')({
   border: `1px solid ${LILAC}`,
-  backgroundColor: WHITE,
-  "&[data-placement*='top']": {
-    marginBottom: 10
-  },
-  "&[data-placement*='right']": {
-    marginLeft: 10
-  },
-  "&[data-placement*='bottom']": {
-    marginTop: 10
-  },
-  "&[data-placement*='left']": {
-    marginRight: 10
-  }
-  // marginTop: 15,
-  // '&::before': {
-  //   borderWidth: 11,
-  //   content: '""',
-  //   position: 'absolute',
-  //   left: '50%',
-  //   marginLeft: -11,
-  //   width: 0,
-  //   height: 0,
-  //   border: 'solid transparent'
-  // },
-  // '&::after': {
-  //   borderWidth: 10,
-  //   content: '""',
-  //   position: 'absolute',
-  //   marginLeft: -10,
-  //   left: '50%',
-  //   width: 0,
-  //   height: 0,
-  //   border: 'solid transparent'
-  // },
-  // "&[data-placement*='bottom']": {
-  //   marginTop: 15,
-  //   '&::before': {
-  //     top: -6,
-  //     borderWidth: 11,
-  //     borderColor: `transparent transparent ${LILAC} transparent`
-  //   },
-  //   '&::after': {
-  //     top: -3,
-  //     borderWidth: 10,
-  //     borderColor: `transparent transparent ${WHITE} transparent`
-  //   }
-  // },
-  // "&[data-placement*='top']": {
-  //   marginTop: -15,
-  //   '&::before': {
-  //     bottom: -21,
-  //     borderWidth: 11,
-  //     borderColor: `${LILAC} transparent transparent transparent`
-  //   },
-  //   '&::after': {
-  //     bottom: -18,
-  //     borderWidth: 10,
-  //     borderColor: `${WHITE} transparent transparent transparent`
-  //   }
-  // }
+  backgroundColor: WHITE
 });
 
 const Arrow = styled('div')`
@@ -111,43 +52,59 @@ const Arrow = styled('div')`
   &[data-placement*='bottom'] {
     top: 0;
     left: 0;
-    margin-top: -0.9em;
+    margin-top: -9px;
     width: 3em;
     height: 1em;
     &::before {
       border-width: 0 10px 10px 10px;
       border-color: transparent transparent ${LILAC} transparent;
     }
+    &::after {
+      border-width: 0 9px 9px 9px;
+      border-color: transparent transparent ${WHITE} transparent;
+    }
   }
   &[data-placement*='top'] {
     bottom: 0;
     left: 0;
-    margin-bottom: -0.9em;
+    margin-bottom: -9px;
     width: 3em;
     height: 1em;
     &::before {
       border-width: 10px 10px 0 10px;
       border-color: ${LILAC} transparent transparent transparent;
     }
+    &::after {
+      border-width: 9px 9px 0 9px;
+      border-color: ${WHITE} transparent transparent transparent;
+    }
   }
   &[data-placement*='right'] {
     left: 0;
-    margin-left: -0.9em;
+    margin-left: -9px;
     height: 1.5em;
     width: 0.5em;
     &::before {
       border-width: 10px 10px 10px 0;
       border-color: transparent ${LILAC} transparent transparent;
     }
+    &::after {
+      border-width: 9px 9px 9px 0;
+      border-color: transparent ${WHITE} transparent transparent;
+    }
   }
   &[data-placement*='left'] {
     right: 0;
-    margin-right: -0.9em;
+    margin-right: -9px;
     height: 3em;
     width: 1em;
     &::before {
       border-width: 10px 0 10px 10px;
       border-color: transparent transparent transparent ${LILAC};
+    }
+    &::after {
+      border-width: 9px 0 9px 9px;
+      border-color: transparent transparent transparent ${WHITE};
     }
   }
   &::before {
@@ -157,6 +114,18 @@ const Arrow = styled('div')`
     width: 0;
     height: 0;
     border-style: solid;
+    position: absolute;
+  }
+  &::after {
+    content: '';
+    margin: auto;
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin-left: 1px;
+    margin-top: 1px;
   }
 `;
 
@@ -164,15 +133,13 @@ const TOP = 'top';
 const RIGHT = 'right';
 const BOTTOM = 'bottom';
 const LEFT = 'left';
-const OFFSET = 20;
+const OFFSET = 15;
 const OFFSETS = new Map();
 OFFSETS.set(TOP, BOTTOM);
 OFFSETS.set(RIGHT, LEFT);
 OFFSETS.forEach((value, key) => {
   OFFSETS.set(value, key);
 });
-
-// const OFFSETS = { `${TOP}`: BOTTOM, RIGHT: LEFT, BOTTOM: TOP, LEFT: RIGHT };
 
 export default class TagList extends Component {
   static propTypes = {
@@ -189,22 +156,7 @@ export default class TagList extends Component {
   handleClick = () => {
     this.setState({ isOpen: !this.state.isOpen });
     this.addOutsideClickHandler();
-    // this.setState(prevState => ({
-    //   isOpen: !prevState.isOpen
-    // }));
   };
-
-  // style={{
-  //   opacity,
-  //   top: 0,
-  //   left: 0,
-  //   position,
-  //   padding: '1em',
-  //   width: '10em',
-  //   transform: `translate3d(${left}px, ${top +
-  //     topOffset}px, 0) scale(${scale}) rotate(${rotation})`,
-  //   transformOrigin: 'top center',
-  // }}
 
   handleOutsideClick = event => {
     if (!this.container.contains(event.target)) {
@@ -231,13 +183,6 @@ export default class TagList extends Component {
     return (
       <Container ref={this.assignContainer}>
         <Manager>
-          {/* <Reference>
-            {({ ref }) => (
-              <button type="button" ref={ref}>
-                Reference element
-              </button>
-            )}
-          </Reference> */}
           <Count>
             <Reference>
               {({ ref }) => (
@@ -265,14 +210,11 @@ export default class TagList extends Component {
                     return data;
                   }
                 }
-                // offset: { enabled: true, offset: '100%w' }
               }}
             >
               {({ ref, style, placement, arrowProps }) => {
-                // console.log('cool guy', ref);
                 return (
                   <div ref={ref} style={style} data-placement={placement}>
-                    {/* Popper element */}
                     <Arrow
                       innerRef={arrowProps.ref}
                       data-placement={placement}
@@ -281,7 +223,6 @@ export default class TagList extends Component {
                     <Content>
                       <Tags>{items}</Tags>
                     </Content>
-                    {/* <div ref={arrowProps.ref} style={arrowProps.style} /> */}
                   </div>
                 );
               }}
