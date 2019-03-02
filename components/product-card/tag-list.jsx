@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { Manager, Reference, Popper } from 'react-popper';
 import { BASE_TEXT } from '../../shared/style/typography';
 import { GUNSMOKE, LILAC, WHITE } from '../../shared/style/colors';
-// import {Manager, Target, Popper, Arrow} from 'react-popper';
-import { Manager, Reference, Popper } from 'react-popper';
-import Tag from './tag';
+import Tag from './tag.jsx';
 
 const Container = styled('div')({
   display: 'flex',
@@ -35,7 +34,7 @@ const Tags = styled('ul')({
   '> div': {
     marginTop: 15
   },
-  '> div:first-child': {
+  '> div:first-of-type': {
     marginTop: 0
   }
 });
@@ -67,7 +66,7 @@ const Arrow = styled('div')`
   &[data-placement*='top'] {
     bottom: 0;
     left: 0;
-    margin-bottom: -9px;
+    margin-bottom: -15px;
     width: 3em;
     height: 1em;
     &::before {
@@ -75,6 +74,7 @@ const Arrow = styled('div')`
       border-color: ${LILAC} transparent transparent transparent;
     }
     &::after {
+      margin-top: -1px;
       border-width: 9px 9px 0 9px;
       border-color: ${WHITE} transparent transparent transparent;
     }
@@ -95,7 +95,7 @@ const Arrow = styled('div')`
   }
   &[data-placement*='left'] {
     right: 0;
-    margin-right: -9px;
+    margin-right: -15px;
     height: 3em;
     width: 1em;
     &::before {
@@ -103,6 +103,7 @@ const Arrow = styled('div')`
       border-color: transparent transparent transparent ${LILAC};
     }
     &::after {
+      margin-left: 0;
       border-width: 9px 0 9px 9px;
       border-color: transparent transparent transparent ${WHITE};
     }
@@ -134,12 +135,7 @@ const RIGHT = 'right';
 const BOTTOM = 'bottom';
 const LEFT = 'left';
 const OFFSET = 15;
-const OFFSETS = new Map();
-OFFSETS.set(TOP, BOTTOM);
-OFFSETS.set(RIGHT, LEFT);
-OFFSETS.forEach((value, key) => {
-  OFFSETS.set(value, key);
-});
+const ARROW_OFFSET = 10;
 
 export default class TagList extends Component {
   static propTypes = {
@@ -159,7 +155,7 @@ export default class TagList extends Component {
   };
 
   handleOutsideClick = event => {
-    if (!this.container.contains(event.target)) {
+    if (this.container && !this.container.contains(event.target)) {
       this.setState({ isOpen: false });
       this.removeOutsideClickHandler();
     }
@@ -179,90 +175,82 @@ export default class TagList extends Component {
 
   render() {
     const { tags } = this.props;
-    const items = tags.map(tag => <Tag name={tag.name} url={tag.url} />);
+    const items = tags.map(({ id, name, url }) => (
+      <Tag key={id} name={name} url={url} />
+    ));
+    const firstTag = tags[0];
     return (
       <Container ref={this.assignContainer}>
-        <Manager>
-          <Count>
-            <Reference>
-              {({ ref }) => (
-                <div ref={ref} onClick={() => this.handleClick()}>
-                  + {tags.length - 1}
-                </div>
-              )}
-            </Reference>
-          </Count>
-          {this.state.isOpen && (
-            <Popper
-              placement="auto"
-              modifiers={{
-                addMargin: {
-                  order: 1,
-                  enabled: true,
-                  function: data => {
-                    const {
-                      placement,
-                      offsets: { popper }
-                    } = data;
-                    popper[OFFSETS.get(placement)] += OFFSET;
-
-                    data.offsets.popper = popper;
-                    return data;
-                  }
-                }
-              }}
-            >
-              {({ ref, style, placement, arrowProps }) => {
-                return (
-                  <div ref={ref} style={style} data-placement={placement}>
-                    <Arrow
-                      innerRef={arrowProps.ref}
-                      data-placement={placement}
-                      style={arrowProps.style}
-                    />
-                    <Content>
-                      <Tags>{items}</Tags>
-                    </Content>
+        <Tag name={firstTag.name} url={firstTag.url} />
+        {tags.length > 1 && (
+          <Manager>
+            <Count>
+              <Reference>
+                {({ ref }) => (
+                  <div ref={ref} onClick={() => this.handleClick()}>
+                    + {tags.length - 1}
                   </div>
-                );
-              }}
-            </Popper>
-          )}
-        </Manager>
+                )}
+              </Reference>
+            </Count>
+            {this.state.isOpen && (
+              <Popper
+                placement="auto"
+                modifiers={{
+                  addMargin: {
+                    order: 1,
+                    enabled: true,
+                    function: data => {
+                      const {
+                        placement,
+                        offsets: { popper }
+                      } = data;
+                      switch (placement) {
+                        case TOP:
+                          popper[TOP] -= OFFSET;
+                          break;
+                        case RIGHT:
+                          popper[LEFT] += OFFSET;
+                          break;
+                        case BOTTOM:
+                          popper[TOP] += OFFSET;
+                          break;
+                        case LEFT:
+                          popper[LEFT] -= OFFSET;
+                          break;
+                        default:
+                          break;
+                      }
+                      data.offsets.popper = popper;
+                      return data;
+                    }
+                  }
+                }}
+              >
+                {({ ref, style, placement, arrowProps }) => {
+                  if ([TOP, BOTTOM].includes(placement)) {
+                    arrowProps.style.left += ARROW_OFFSET;
+                  } else if (placement === LEFT) {
+                    arrowProps.style.top += ARROW_OFFSET;
+                  }
+                  return (
+                    <div ref={ref} style={style} data-placement={placement}>
+                      <Arrow
+                        ref={arrowProps.ref}
+                        data-placement={placement}
+                        style={arrowProps.style}
+                      />
+                      <Content>
+                        <Tags>{items.slice(1, items.length)}</Tags>
+                      </Content>
+                    </div>
+                  );
+                }}
+              </Popper>
+            )}
+          </Manager>
+        )}
       </Container>
     );
   }
-
-  // render() {
-  //   const { tags } = this.props;
-  //   // console.log(tags);
-  //   const items = tags.map(tag => <Tag name={tag.name} url={tag.url} />);
-  //   return (
-  //     <Container>
-  //       <Tag name={tags[0].name} />
-  //       <Manager>
-
-  //         {this.state.isOpen && (
-  //           <Popper placement="top">
-  //             {({ ref, style, placement, arrowProps }) => (
-  //               <div ref={ref} style={style} data-placement={placement}>
-  //                 {/* <Arrow
-  //                   innerRef={arrowProps.ref}
-  //                   data-placement={placement}
-  //                   style={arrowProps.style}
-  //                 /> */}
-  //                 {/* <Content data-placement={placement}> */}
-  //                 <Content data-placement={placement}>
-  // <Tags>{items}</Tags>
-  //                 </Content>
-
-  //                 {/* <div ref={arrowProps.ref} style={arrowProps.style} /> */}
-  //               </div>
-  //             )}
-  //           </Popper>
-  //         )}
-  //       </Manager>
-  //     </Container>
-  //   );
-  // }
 }
