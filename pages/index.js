@@ -4,23 +4,24 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import styled from '@emotion/styled';
 import ProductCard from '../components/product-card';
+import { productsQuery } from '../data/queries';
 
-const productsQuery = gql`
-  query products($first: Int!, $skip: Int!) {
-    products(first: $first, skip: $skip) {
-      id
-      name
-      slug
-      description
-      imageUrl
-      topics {
-        id
-        name
-        slug
-      }
-    }
-  }
-`;
+// const productsQuery = gql`
+//   query products($first: Int!, $skip: Int!) {
+//     products(first: $first, skip: $skip) {
+//       id
+//       name
+//       slug
+//       description
+//       imageUrl
+//       topics {
+//         id
+//         name
+//         slug
+//       }
+//     }
+//   }
+// `;
 
 export const productsQueryVars = {
   first: 5,
