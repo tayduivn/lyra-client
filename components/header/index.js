@@ -4,7 +4,7 @@ import { withRouter } from 'next/router';
 import { compose } from 'react-apollo';
 import { withTheme } from 'emotion-theming';
 import { Link } from '../../routes';
-import User from '../user.jsx';
+import User from '../user';
 import Logo from './logo';
 import Avatar from './avatar';
 import PlusIcon from './icons/plus.svg';

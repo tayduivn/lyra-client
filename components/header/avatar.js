@@ -8,7 +8,6 @@ const UserAvatar = styled.img`
 `;
 
 const Avatar = ({ avatar }) => {
-  console.log('avatar', avatar);
   return <UserAvatar src={avatar} />;
 };
 

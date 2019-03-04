@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { Mutation } from 'react-apollo';
+import User from '../user';
 import { BASE_TEXT } from '../../shared/style/typography';
 import { ALABASTER, LILAC, GUNSMOKE } from '../../shared/style/colors';
+import { followTopic } from '../../data/mutations';
 
 const HEIGHT = 24;
 
@@ -65,10 +68,27 @@ export default class Tag extends Component {
   render() {
     const { name, url, onClick } = this.props;
     return (
-      <Container>
-        <Link href={url}>{name}</Link>
-        <Action onClick={onClick} />
-      </Container>
+      <User>
+        {({ data: { me } }) => (
+          <Mutation mutation={followTopic}>
+            {(followTopic, { data }) => (
+              <Container>
+                <Link href={url}>{name}</Link>
+                <Action
+                  onClick={() => {
+                    if (me) {
+                      console.log('there is a user, yay!');
+                      // followTopic({ variables: { userId: '1', topicId: '2' } });
+                    } else {
+                      console.log('no user bro');
+                    }
+                  }}
+                />
+              </Container>
+            )}
+          </Mutation>
+        )}
+      </User>
     );
   }
 }
