@@ -16,3 +16,18 @@ export const productsQuery = gql`
     }
   }
 `;
+
+export const CURRENT_USER_QUERY = gql`
+  query {
+    me {
+      id
+      email
+      name
+      avatar
+      followedTopics {
+        id
+        name
+      }
+    }
+  }
+`;

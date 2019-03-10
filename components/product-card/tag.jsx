@@ -5,7 +5,9 @@ import { Mutation } from 'react-apollo';
 import User from '../user';
 import { BASE_TEXT } from '../../shared/style/typography';
 import { ALABASTER, LILAC, GUNSMOKE } from '../../shared/style/colors';
-import { followTopic } from '../../data/mutations';
+import { UPDATE_FOLLOWED_TOPIC } from '../../data/mutations';
+import { CURRENT_USER_QUERY } from '../../data/queries';
+import { show } from '../../lib/utils/lock';
 
 const HEIGHT = 24;
 
@@ -24,25 +26,28 @@ const Action = styled('span')({
   }
 });
 
-const Container = styled('div')({
-  ...BASE_TEXT,
-  border: `1px solid ${LILAC}`,
-  backgroundColor: ALABASTER,
-  borderRadius: 3,
-  display: 'inline-flex',
-  alignItems: 'center',
-  height: HEIGHT,
-  '&:hover': {
-    [Action]: {
-      borderLeftWidth: 1,
-      width: 24,
-      '&::after': {
-        content: `'+'`
+const Container = styled('div')(
+  {
+    ...BASE_TEXT,
+    border: `1px solid ${LILAC}`,
+    backgroundColor: ALABASTER,
+    borderRadius: 3,
+    display: 'inline-flex',
+    alignItems: 'center',
+    height: HEIGHT
+  },
+  ({ following }) => ({
+    '&:hover': {
+      [Action]: {
+        borderLeftWidth: 1,
+        width: 24,
+        '&::after': {
+          content: following ? `'-'` : `'+'`
+        }
       }
     }
-  },
-  [Action]: {}
-});
+  })
+);
 
 const Link = styled('a')({
   padding: '0 8px',
@@ -61,33 +66,60 @@ const Link = styled('a')({
 export default class Tag extends Component {
   static propTypes = {
     name: PropTypes.string,
-    url: PropTypes.string,
-    onClick: PropTypes.func
+    id: PropTypes.string,
+    slug: PropTypes.string
   };
 
   render() {
-    const { name, url, onClick } = this.props;
+    const { id, name, slug } = this.props;
     return (
       <User>
-        {({ data: { me } }) => (
-          <Mutation mutation={followTopic}>
-            {(followTopic, { data }) => (
-              <Container>
-                <Link href={url}>{name}</Link>
-                <Action
-                  onClick={() => {
-                    if (me) {
-                      console.log('there is a user, yay!');
-                      // followTopic({ variables: { userId: '1', topicId: '2' } });
-                    } else {
-                      console.log('no user bro');
-                    }
-                  }}
-                />
-              </Container>
-            )}
-          </Mutation>
-        )}
+        {({ data: { me } }) => {
+          const following = me
+            ? me.followedTopics.map(topic => topic.id).includes(id)
+            : false;
+          return (
+            <Mutation
+              mutation={UPDATE_FOLLOWED_TOPIC}
+              update={(cache, { data: { updateFollowedTopic } }) => {
+                const user = cache.readQuery({ query: CURRENT_USER_QUERY });
+                const { followedTopics } = user.me;
+                let updatedTopics;
+                if (following) {
+                  updatedTopics = followedTopics.filter(
+                    topic => topic.id !== id
+                  );
+                } else {
+                  followedTopics.push(updateFollowedTopic);
+                  updatedTopics = followedTopics;
+                }
+                user.me.followedTopics = updatedTopics;
+                cache.writeQuery({ query: CURRENT_USER_QUERY, data: user });
+              }}
+            >
+              {updateFollowedTopic => (
+                <Container following={following}>
+                  <Link href={slug}>{name}</Link>
+                  <Action
+                    onClick={() => {
+                      if (me) {
+                        updateFollowedTopic({
+                          variables: {
+                            userId: me.id,
+                            topicId: id,
+                            following: !following
+                          }
+                        });
+                      } else {
+                        show();
+                      }
+                    }}
+                  />
+                </Container>
+              )}
+            </Mutation>
+          );
+        }}
       </User>
     );
   }

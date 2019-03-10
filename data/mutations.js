@@ -1,8 +1,17 @@
 import gql from 'graphql-tag';
 
-export const followTopic = gql`
-  mutation followTopic($userId: ID!, $topicId: ID!) {
-    followTopic(userId: $userId, topicId: $topicId) {
+// eslint-disable-next-line
+export const UPDATE_FOLLOWED_TOPIC = gql`
+  mutation updateFollowedTopic(
+    $userId: ID!
+    $topicId: ID!
+    $following: Boolean!
+  ) {
+    updateFollowedTopic(
+      userId: $userId
+      topicId: $topicId
+      following: $following
+    ) {
       id
     }
   }

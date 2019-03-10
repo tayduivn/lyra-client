@@ -175,13 +175,14 @@ export default class TagList extends Component {
 
   render() {
     const { tags } = this.props;
-    const items = tags.map(({ id, name, url }) => (
-      <Tag key={id} name={name} url={url} />
+    const items = tags.map(({ id, name, slug }) => (
+      <Tag key={id} id={id} name={name} slug={slug} />
     ));
     const firstTag = tags[0];
+    const { id, name, slug } = firstTag;
     return (
       <Container ref={this.assignContainer}>
-        <Tag name={firstTag.name} url={firstTag.url} />
+        <Tag key={id} id={id} name={name} slug={slug} />
         {tags.length > 1 && (
           <Manager>
             <Count>
