@@ -74,7 +74,7 @@ export default class ProductList extends Component {
               name={product.name}
               description={product.description}
               imageUrl={product.imageUrl}
-              tags={product.tags}
+              tags={product.topics}
             />
           ))}
         </List>

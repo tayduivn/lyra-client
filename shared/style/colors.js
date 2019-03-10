@@ -1,4 +1,5 @@
 export const BLACK = '#000';
+export const SCOPRION = '#666';
 export const WHITE = '#FFF';
 export const GUNSMOKE = '#999';
 export const ALABASTER = '#F8F8F8';

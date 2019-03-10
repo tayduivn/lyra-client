@@ -4,6 +4,8 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import styled from '@emotion/styled';
 import ProductCard from '../components/product-card';
+import ProductList from '../components/product-list';
+
 import { productsQuery } from '../data/queries';
 
 export const productsQueryVars = {
@@ -19,7 +21,8 @@ const Container = styled('div')({
 });
 
 const Main = styled('main')({
-  flex: 1
+  flex: 1,
+  padding: 15
 });
 
 const Aside = styled('aside')({
@@ -46,8 +49,9 @@ export default class Index extends React.Component {
               if (loading) return <div>Loading</div>;
               return (
                 <div>
+                  <ProductList products={products} />
                   {/* <pre>{products.toString()}</pre> */}
-                  {products.map(product => {
+                  {/* {products.map(product => {
                     return (
                       <ProductCard
                         key={product.id}
@@ -57,7 +61,7 @@ export default class Index extends React.Component {
                         tags={product.topics}
                       />
                     );
-                  })}
+                  })} */}
                   <a
                     onClick={() =>
                       fetchMore({

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { BASE_TEXT } from '../../shared/style/typography';
+import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import { BLACK, GUNSMOKE, LILAC } from '../../shared/style/colors';
 import TagList from './tag-list.jsx';
 
@@ -10,7 +10,7 @@ const Container = styled('li')({
 });
 
 const Link = styled('div')({
-  padding: 15,
+  padding: 20,
   display: 'flex',
   flexDirection: 'row',
   borderBottom: `1px solid ${LILAC}`,
@@ -20,7 +20,7 @@ const Link = styled('div')({
 const Thumbnail = styled('img')({
   width: 80,
   height: 80,
-  marginRight: 15
+  marginRight: 10
 });
 
 const Content = styled('div')({
@@ -30,14 +30,17 @@ const Content = styled('div')({
 
 const Name = styled('div')({
   ...BASE_TEXT,
-  fontSize: 20,
+  fontSize: 16,
+  lineHeight: '24px',
+  fontWeight: WEIGHT.BOLD,
   color: BLACK
 });
 
 const Description = styled('div')({
   ...BASE_TEXT,
   color: GUNSMOKE,
-  marginBottom: 5
+  lineHeight: '20px',
+  marginBottom: 12
 });
 
 const Footer = styled('div')({
