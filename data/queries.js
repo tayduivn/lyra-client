@@ -1,8 +1,29 @@
 import gql from 'graphql-tag';
 
-export const productsQuery = gql`
-  query products($first: Int!, $skip: Int!) {
-    products(first: $first, skip: $skip) {
+export const FEED_QUERY = gql`
+  query sections($first: Int!, $skip: Int!, $after: String) {
+    sections(first: $first, skip: $skip, after: $after) {
+      id
+      date
+      posts {
+        id
+        name
+        slug
+        description
+        thumbnail
+        topics {
+          id
+          name
+          slug
+        }
+      }
+    }
+  }
+`;
+
+export const postsQuery = gql`
+  query posts($first: Int!, $skip: Int!) {
+    posts(first: $first, skip: $skip) {
       id
       name
       slug

@@ -5,10 +5,9 @@ import { Query } from 'react-apollo';
 import styled from '@emotion/styled';
 import ProductCard from '../components/product-card';
 import ProductList from '../components/product-list';
+import ConnectedFeed from '../containers/feed/connected-feed';
 
-import { productsQuery } from '../data/queries';
-
-export const productsQueryVars = {
+export const postsQueryVars = {
   first: 5,
   skip: 0
 };
@@ -38,44 +37,29 @@ export default class Index extends React.Component {
     return (
       <Container>
         <Main>
-          <Query query={productsQuery} variables={productsQueryVars}>
+          main panel
+          <ConnectedFeed />
+          {/* <Query query={postsQuery} variables={postsQueryVars}>
             {({
               loading,
               error,
-              data: { products, _productsMeta },
+              data: { posts, _productsMeta },
               fetchMore
             }) => {
-              // if (error) return <div>error</div>;
               if (loading) return <div>Loading</div>;
               return (
                 <div>
-                  <ProductList products={products} />
-                  {/* <pre>{products.toString()}</pre> */}
-                  {/* {products.map(product => {
-                    return (
-                      <ProductCard
-                        key={product.id}
-                        name={product.name}
-                        description={product.description}
-                        imageUrl={product.imageUrl}
-                        tags={product.topics}
-                      />
-                    );
-                  })} */}
                   <a
                     onClick={() =>
                       fetchMore({
                         variables: {
-                          skip: products.length,
+                          skip: posts.length,
                           first: 5
                         },
                         updateQuery: (prev, { fetchMoreResult }) => {
                           if (!fetchMoreResult) return prev;
                           return Object.assign({}, prev, {
-                            products: [
-                              ...prev.products,
-                              ...fetchMoreResult.products
-                            ]
+                            posts: [...prev.posts, ...fetchMoreResult.posts]
                           });
                         }
                       })
@@ -86,7 +70,7 @@ export default class Index extends React.Component {
                 </div>
               );
             }}
-          </Query>
+          </Query> */}
         </Main>
         <Aside>Side Panel</Aside>
       </Container>
