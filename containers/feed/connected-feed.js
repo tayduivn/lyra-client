@@ -12,7 +12,6 @@ const ConnectedFeed = () => (
         <Feed
           sections={data.sections}
           onLoadMore={() => {
-            console.log(data.sections.length);
             fetchMore({
               variables: {
                 skip: data.sections.length,

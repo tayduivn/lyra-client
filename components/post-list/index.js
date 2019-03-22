@@ -4,11 +4,11 @@ import styled from '@emotion/styled';
 import { LILAC, ALABASTER, WHITE } from '../../shared/style/colors';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import Post from '../post';
+import { formatDate } from '../../shared/utils';
 
 const Container = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  border: `1px solid ${LILAC}`,
   padding: 0,
   marginBottom: 30
 });
@@ -18,14 +18,13 @@ const Header = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
   margin: '0 20px 0 20px',
-  padding: '20px 0 15px 0',
-  borderBottom: `1px solid ${LILAC}`
+  padding: '20px 0 15px 0'
 });
 
 const Day = styled('div')({
   ...BASE_TEXT,
   fontSize: 20,
-  fontWeight: WEIGHT.LITE
+  fontWeight: WEIGHT.BOLD
 });
 
 const List = styled('ul')({
@@ -56,7 +55,7 @@ const Filter = styled('a')({
 const PostList = ({ date, posts }) => (
   <Container>
     <Header>
-      <Day>Today</Day>
+      <Day>{formatDate(date)}</Day>
       <Navigation>
         <Filter>Popular</Filter>
         <Filter>Newest</Filter>
