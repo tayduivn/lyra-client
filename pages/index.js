@@ -12,10 +12,13 @@ export const postsQueryVars = {
   skip: 0
 };
 
+const MAX_WIDTH = 1100;
+const MIN_WIDTH = 320;
+
 const Container = styled('div')({
   margin: 'auto',
-  maxWidth: 1100,
-  minWidth: 320,
+  maxWidth: MAX_WIDTH,
+  minWidth: MIN_WIDTH,
   display: 'flex'
 });
 
@@ -25,6 +28,9 @@ const Main = styled('main')({
 });
 
 const Aside = styled('aside')({
+  [`@media only screen and (max-width: ${MAX_WIDTH}px)`]: {
+    display: 'none'
+  },
   width: 330
 });
 

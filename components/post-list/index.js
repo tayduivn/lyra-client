@@ -56,10 +56,10 @@ const PostList = ({ date, posts }) => (
   <Container>
     <Header>
       <Day>{formatDate(date)}</Day>
-      <Navigation>
+      {/* <Navigation>
         <Filter>Popular</Filter>
         <Filter>Newest</Filter>
-      </Navigation>
+      </Navigation> */}
     </Header>
     <List>
       {posts.map(post => (

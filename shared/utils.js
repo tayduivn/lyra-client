@@ -1,6 +1,9 @@
 /* eslint import/prefer-default-export: 0 */
 import moment from 'moment';
 
+const TODAY = 'Today';
+const YESTERDAY = 'Yesterday';
+
 const isToday = date => moment(date).isSame(moment(), 'day');
 
 const isYesterday = date =>
@@ -8,10 +11,10 @@ const isYesterday = date =>
 
 export const formatDate = date => {
   if (isToday(date)) {
-    return 'Today';
+    return TODAY;
   }
   if (isYesterday(date)) {
-    return 'Yesterday';
+    return YESTERDAY;
   }
   return moment(date).format('MMMM Do');
 };

@@ -11,7 +11,7 @@ const ConnectedFeed = () => (
       return (
         <Feed
           sections={data.sections}
-          onLoadMore={() => {
+          onLoadMore={cb => {
             fetchMore({
               variables: {
                 skip: data.sections.length,
@@ -19,6 +19,7 @@ const ConnectedFeed = () => (
               },
               updateQuery: (prev, { fetchMoreResult }) => {
                 if (!fetchMoreResult) return prev;
+                cb();
                 return Object.assign({}, prev, {
                   sections: [...prev.sections, ...fetchMoreResult.sections]
                 });
