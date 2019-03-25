@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { withRouter } from 'next/router';
 import { compose } from 'react-apollo';
@@ -7,7 +7,7 @@ import { Link } from '../../routes';
 import User from '../user';
 import Logo from './logo';
 import Avatar from './avatar';
-import PlusIcon from './icons/plus.svg';
+import PlusIcon from '../../shared/style/icons/plus.svg';
 
 const Wrapper = styled('div')(({ theme: { COLORS: { WHITE, LILAC } } }) => ({
   backgroundColor: WHITE,

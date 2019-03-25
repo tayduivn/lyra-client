@@ -5,15 +5,20 @@ import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import { BLACK, GUNSMOKE, LILAC } from '../../shared/style/colors';
 import TagList from '../product-card/tag-list.jsx';
 
-const Container = styled('li')({
-  listStyleType: 'none'
-});
+export const Container = styled('li')(
+  {
+    listStyleType: 'none'
+  },
+  ({ visible }) => ({
+    display: visible ? 'block' : 'none'
+  })
+);
 
-const Link = styled('div')({
+export const Link = styled('div')({
   padding: 20,
   display: 'flex',
   flexDirection: 'row',
-  borderBottom: `1px solid ${LILAC}`,
+  borderTop: `1px solid ${LILAC}`,
   cursor: 'pointer'
 });
 
@@ -23,7 +28,7 @@ const Thumbnail = styled('img')({
   marginRight: 10
 });
 
-const Content = styled('div')({
+export const Content = styled('div')({
   display: 'flex',
   flexDirection: 'column'
 });
@@ -47,8 +52,8 @@ const Footer = styled('div')({
   display: 'flex'
 });
 
-const Post = ({ name, description, thumbnail, tags }) => (
-  <Container>
+const Post = ({ name, description, thumbnail, tags, visible }) => (
+  <Container visible={visible}>
     <Link>
       <Thumbnail src={thumbnail} />
       <Content>
@@ -66,7 +71,8 @@ Post.propTypes = {
   description: PropTypes.string,
   votesCount: PropTypes.number,
   commentsCount: PropTypes.number,
-  tags: PropTypes.array
+  tags: PropTypes.array,
+  visible: PropTypes.bool
 };
 
 export default Post;
