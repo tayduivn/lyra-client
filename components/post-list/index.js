@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { LILAC, ALABASTER, WHITE, GUNSMOKE } from '../../shared/style/colors';
+import { LILAC, WHITE, GUNSMOKE } from '../../shared/style/colors';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import Post from '../post';
 import { formatDate } from '../../shared/utils';
@@ -31,15 +31,9 @@ const Day = styled('div')({
 
 const List = styled('ul')({
   boxShadow: '0 1px 2px 0 rgba(0,0,0,.1)',
-  backgroundColor: WHITE,
   padding: 0,
   margin: 0,
-  ' > li': {
-    '&:hover': {
-      backgroundColor: ALABASTER
-    }
-  },
-  ' > li:first-of-type > div': {
+  ' > li:first-of-type > div:first-of-type': {
     borderTop: 'none'
   }
 });
@@ -60,6 +54,7 @@ const Filter = styled('a')({
 
 const Footer = styled('div')({
   ...BASE_TEXT,
+  backgroundColor: WHITE,
   borderTop: `1px solid ${LILAC}`,
   padding: 15,
   textAlign: 'center',
@@ -92,11 +87,13 @@ const PostList = ({ date, posts }) => {
       <List>
         {posts.map((post, index) => (
           <Post
+            id={post.id}
             visible={showAll ? true : index < DEFAULT_VISIBLE}
             key={post.id}
             name={post.name}
             description={post.description}
             thumbnail={post.thumbnail}
+            votesCount={post.votesCount}
             tags={post.topics}
           />
         ))}

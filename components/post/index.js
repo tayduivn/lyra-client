@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { Mutation } from 'react-apollo';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
-import { BLACK, GUNSMOKE, LILAC } from '../../shared/style/colors';
+import {
+  BLACK,
+  GUNSMOKE,
+  LILAC,
+  WHITE,
+  ALABASTER
+} from '../../shared/style/colors';
 import TagList from '../product-card/tag-list.jsx';
+import User from '../user';
+import ChevronUp from '../../shared/style/icons/chevron-up.svg';
+import { VOTE } from '../../data/mutations';
+import { show } from '../../lib/utils/lock';
 
 export const Container = styled('li')(
   {
+    position: 'relative',
     listStyleType: 'none'
   },
   ({ visible }) => ({
@@ -15,6 +27,10 @@ export const Container = styled('li')(
 );
 
 export const Link = styled('div')({
+  backgroundColor: WHITE,
+  '&:hover': {
+    backgroundColor: ALABASTER
+  },
   padding: 20,
   display: 'flex',
   flexDirection: 'row',
@@ -30,7 +46,8 @@ const Thumbnail = styled('img')({
 
 export const Content = styled('div')({
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
+  flexGrow: 1
 });
 
 const Name = styled('div')({
@@ -52,7 +69,48 @@ const Footer = styled('div')({
   display: 'flex'
 });
 
-const Post = ({ name, description, thumbnail, tags, visible }) => (
+const VotesWrapper = styled('div')({
+  position: 'absolute',
+  top: '50%',
+  right: 20,
+  transform: 'translateY(-50%)',
+  backgroundColor: WHITE,
+  '&:hover': {
+    backgroundColor: ALABASTER
+  },
+  border: `1px solid ${LILAC}`,
+  borderRadius: 3
+});
+
+const Votes = styled('div')({
+  ...BASE_TEXT,
+  cursor: 'pointer',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: 74,
+  width: 64,
+  fontWeight: WEIGHT.BOLD,
+  ' > svg': {
+    width: 16,
+    height: 11,
+    marginBottom: 3,
+    ' > path': {
+      fill: 'BLACK'
+    }
+  }
+});
+
+const Post = ({
+  id,
+  name,
+  description,
+  thumbnail,
+  tags,
+  visible,
+  votesCount
+}) => (
   <Container visible={visible}>
     <Link>
       <Thumbnail src={thumbnail} />
@@ -62,10 +120,33 @@ const Post = ({ name, description, thumbnail, tags, visible }) => (
         <Footer>{tags.length > 0 && <TagList tags={tags} />}</Footer>
       </Content>
     </Link>
+    <User>
+      {({ data: { me } }) => (
+        <Mutation variables={{ postId: id }} mutation={VOTE}>
+          {vote => (
+            <VotesWrapper>
+              <Votes
+                onClick={() => {
+                  if (me) {
+                    vote();
+                  } else {
+                    show();
+                  }
+                }}
+              >
+                <ChevronUp />
+                {votesCount}
+              </Votes>
+            </VotesWrapper>
+          )}
+        </Mutation>
+      )}
+    </User>
   </Container>
 );
 
 Post.propTypes = {
+  id: PropTypes.string,
   thumbnail: PropTypes.string,
   name: PropTypes.string,
   description: PropTypes.string,

@@ -12,10 +12,6 @@ const AVATAR_OFFSET = 110;
 const shineGradient = (baseColor, shineColor) =>
   `linear-gradient(90deg, ${baseColor} 0px, ${shineColor} 40px, ${baseColor} 80px)`;
 
-const StyledContainer = styled(Container)({
-  backgroundColor: WHITE
-});
-
 const Line = styled('div')({
   backgroundImage: shineGradient(BASE_COLOR, SHINE_COLOR),
   backgroundSize: 600,
@@ -41,7 +37,7 @@ const Thumbnail = styled('div')({
 });
 
 const SkeletonPost = () => (
-  <StyledContainer visible={true}>
+  <Container visible={true}>
     <Link>
       <Thumbnail />
       <Content>
@@ -49,7 +45,7 @@ const SkeletonPost = () => (
         <LongerLine />
       </Content>
     </Link>
-  </StyledContainer>
+  </Container>
 );
 
 export default SkeletonPost;

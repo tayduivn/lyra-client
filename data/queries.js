@@ -11,6 +11,7 @@ export const FEED_QUERY = gql`
         slug
         description
         thumbnail
+        votesCount
         topics {
           id
           name

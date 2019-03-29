@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 
-// eslint-disable-next-line
 export const UPDATE_FOLLOWED_TOPIC = gql`
   mutation updateFollowedTopic(
     $userId: ID!
@@ -12,6 +11,14 @@ export const UPDATE_FOLLOWED_TOPIC = gql`
       topicId: $topicId
       following: $following
     ) {
+      id
+    }
+  }
+`;
+
+export const VOTE = gql`
+  mutation vote($postId: ID!) {
+    vote(postId: $postId) {
       id
     }
   }
