@@ -12,6 +12,10 @@ export const FEED_QUERY = gql`
         description
         thumbnail
         votesCount
+        upvoted
+        votes {
+          id
+        }
         topics {
           id
           name

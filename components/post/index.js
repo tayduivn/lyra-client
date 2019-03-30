@@ -8,6 +8,8 @@ import {
   GUNSMOKE,
   LILAC,
   WHITE,
+  RUBY,
+  BLUSH,
   ALABASTER
 } from '../../shared/style/colors';
 import TagList from '../product-card/tag-list.jsx';
@@ -15,6 +17,8 @@ import User from '../user';
 import ChevronUp from '../../shared/style/icons/chevron-up.svg';
 import { VOTE } from '../../data/mutations';
 import { show } from '../../lib/utils/lock';
+
+const ACCENT = BLUSH;
 
 export const Container = styled('li')(
   {
@@ -69,38 +73,48 @@ const Footer = styled('div')({
   display: 'flex'
 });
 
-const VotesWrapper = styled('div')({
-  position: 'absolute',
-  top: '50%',
-  right: 20,
-  transform: 'translateY(-50%)',
-  backgroundColor: WHITE,
-  '&:hover': {
-    backgroundColor: ALABASTER
+const VotesWrapper = styled('div')(
+  {
+    position: 'absolute',
+    top: '50%',
+    right: 20,
+    transform: 'translateY(-50%)',
+    backgroundColor: WHITE,
+    '&:hover': {
+      backgroundColor: ALABASTER
+    },
+    border: `1px solid ${LILAC}`,
+    borderRadius: 3
   },
-  border: `1px solid ${LILAC}`,
-  borderRadius: 3
-});
+  ({ upvoted }) => ({
+    borderColor: upvoted ? RUBY : LILAC
+  })
+);
 
-const Votes = styled('div')({
-  ...BASE_TEXT,
-  cursor: 'pointer',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: 74,
-  width: 64,
-  fontWeight: WEIGHT.BOLD,
-  ' > svg': {
-    width: 16,
-    height: 11,
-    marginBottom: 3,
-    ' > path': {
-      fill: 'BLACK'
+const Votes = styled('div')(
+  {
+    ...BASE_TEXT,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 74,
+    width: 64,
+    fontWeight: WEIGHT.BOLD
+  },
+  ({ upvoted }) => ({
+    color: upvoted ? ACCENT : BLACK,
+    ' > svg': {
+      width: 16,
+      height: 11,
+      marginBottom: 3,
+      ' > path': {
+        fill: upvoted ? ACCENT : BLACK
+      }
     }
-  }
-});
+  })
+);
 
 const Post = ({
   id,
@@ -109,7 +123,8 @@ const Post = ({
   thumbnail,
   tags,
   visible,
-  votesCount
+  votesCount,
+  upvoted
 }) => (
   <Container visible={visible}>
     <Link>
@@ -122,10 +137,17 @@ const Post = ({
     </Link>
     <User>
       {({ data: { me } }) => (
-        <Mutation variables={{ postId: id }} mutation={VOTE}>
+        <Mutation
+          variables={{ postId: id }}
+          update={(cache, { data: { updateFollowedTopic } }) => {
+            console.log('COOL UPDATE');
+          }}
+          mutation={VOTE}
+        >
           {vote => (
-            <VotesWrapper>
+            <VotesWrapper upvoted={upvoted}>
               <Votes
+                upvoted={upvoted}
                 onClick={() => {
                   if (me) {
                     vote();
@@ -153,7 +175,8 @@ Post.propTypes = {
   votesCount: PropTypes.number,
   commentsCount: PropTypes.number,
   tags: PropTypes.array,
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
+  upvoted: PropTypes.bool
 };
 
 export default Post;

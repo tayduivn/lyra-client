@@ -74,6 +74,7 @@ const StyledChevronDown = styled(ChevronDown)({
 const DEFAULT_VISIBLE = 10;
 
 const PostList = ({ date, posts }) => {
+  console.log('posts[0].upvoted', posts[0].upvoted);
   const [showAll, setShowAll] = useState(false);
   return (
     <Container>
@@ -95,6 +96,7 @@ const PostList = ({ date, posts }) => {
             thumbnail={post.thumbnail}
             votesCount={post.votesCount}
             tags={post.topics}
+            upvoted={post.upvoted}
           />
         ))}
         {!showAll && (
