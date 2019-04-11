@@ -1,7 +1,0 @@
-query {
-  products(first: 5) {
-    id
-    slug
-    description
-  }
-}

@@ -1,4 +1,6 @@
 import React from 'react';
+import gql from 'graphql-tag';
+import { defaultDataIdFromObject } from 'apollo-cache-inmemory';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { Mutation } from 'react-apollo';
@@ -139,8 +141,21 @@ const Post = ({
       {({ data: { me } }) => (
         <Mutation
           variables={{ postId: id }}
-          update={(cache, { data: { updateFollowedTopic } }) => {
-            console.log('COOL UPDATE');
+          update={(cache, { data: { vote } }) => {
+            const postId = defaultDataIdFromObject({ id, __typename: 'Post' });
+            cache.writeFragment({
+              id: postId,
+              fragment: gql`
+                fragment myPost on Post {
+                  upvoted
+                  votesCount
+                }
+              `,
+              data: {
+                upvoted: !upvoted,
+                votesCount: upvoted ? votesCount - 1 : votesCount + 1
+              }
+            });
           }}
           mutation={VOTE}
         >
