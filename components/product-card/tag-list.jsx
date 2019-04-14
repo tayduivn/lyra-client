@@ -8,7 +8,8 @@ import Tag from './tag.jsx';
 
 const Container = styled('div')({
   display: 'flex',
-  flexDirection: 'row'
+  flexDirection: 'row',
+  zIndex: 99
 });
 
 const Count = styled('a')({

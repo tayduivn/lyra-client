@@ -21,3 +21,9 @@ export const BASE_TEXT = {
   letterSpacing: 'normal',
   WebkitFontSmoothing: 'antialiased'
 };
+
+export const TITLE_TEXT = {
+  ...BASE_TEXT,
+  fontWeight: WEIGHT.BOLD,
+  fontSize: 15
+};

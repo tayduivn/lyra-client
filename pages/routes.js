@@ -1,5 +1,5 @@
-import routes from 'next-routes';
+// import routes from 'next-routes';
 
-export default routes()
-  .add('about')
-  .add('block-explorer');
+// export default routes()
+//   .add('about')
+//   .add('block-explorer');

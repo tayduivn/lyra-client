@@ -1,9 +1,33 @@
 import React from 'react';
+import { Mutation } from 'react-apollo';
 import { Container, Main, Aside } from '../shared/library/components/layout';
+
+import Panel from '../shared/library/containers/panel';
+import SimpleButton from '../shared/library/components/buttons/simple';
+
+import { MINT_TOKENS } from '../data/mutations';
 
 const BlockExplorer = () => (
   <Container>
-    <Main>Main</Main>
+    <Main>
+      <Panel>
+        <Mutation mutation={MINT_TOKENS}>
+          {mintTokens => (
+            <SimpleButton
+              onClick={() =>
+                mintTokens({
+                  variables: {
+                    amount: 100
+                  }
+                })
+              }
+            >
+              Mint 100 LYRA
+            </SimpleButton>
+          )}
+        </Mutation>
+      </Panel>
+    </Main>
     <Aside>Aside</Aside>
   </Container>
 );

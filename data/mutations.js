@@ -23,3 +23,11 @@ export const VOTE = gql`
     }
   }
 `;
+
+export const MINT_TOKENS = gql`
+  mutation mintTokens($amount: Int!) {
+    mintTokens(amount: $amount) {
+      hash
+    }
+  }
+`;

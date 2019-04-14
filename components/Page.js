@@ -4,6 +4,7 @@ import { Global, css } from '@emotion/core';
 // import {injectGlobal} from 'emotion';
 import { ThemeProvider } from 'emotion-theming';
 import Header from './header';
+import Head from 'next/head';
 
 const THEME = {
   COLORS: {
@@ -31,6 +32,12 @@ export default class Page extends Component {
   render() {
     return (
       <ThemeProvider theme={THEME}>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+        </Head>
         <StyledPage>
           <Global
             styles={css`
