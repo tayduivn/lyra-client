@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import styled from '@emotion/styled';
-
+import { Router } from '../../routes';
 import { Container } from '../../shared/library/components/layout';
-import { PHONE } from '../../shared/style/breakpoints';
+import { LAVENDER, FOCUS_LAVENDER, WHITE } from '../../shared/style/colors';
 import SimpleButton from '../../shared/library/components/buttons/simple';
-import { BASE_TEXT, TITLE_TEXT } from '../../shared/style/typography';
+import { BASE_TEXT, TITLE_TEXT, WEIGHT } from '../../shared/style/typography';
 import Panel from '../../shared/library/containers/panel';
+import { NEW_POST, NEW_POST_SUBMISSION } from '../../shared/constants/routes';
 
 const StyledContainer = styled(Container)({
   display: 'flex',
@@ -15,7 +16,8 @@ const StyledContainer = styled(Container)({
 });
 
 const StyledPanel = styled(Panel)({
-  width: 510,
+  maxWidth: 510,
+  width: '100%',
   boxSizing: 'border-box'
 });
 
@@ -48,17 +50,53 @@ const CowboyEmoji = styled('div')({
   }
 });
 
-const NewPost = () => (
-  <StyledContainer>
-    <Title>
-      Submit a post!<CowboyEmoji>🤠</CowboyEmoji>
-    </Title>
-    <StyledPanel>
-      <Label>Link</Label>
-      <Input type="text" />
-      <SimpleButton>Next</SimpleButton>
-    </StyledPanel>
-  </StyledContainer>
-);
+const SubmitButton = styled(SimpleButton)({
+  marginTop: 10,
+  borderColor: LAVENDER,
+  backgroundColor: LAVENDER,
+  color: WHITE,
+  fontWeight: WEIGHT.BOLD,
+  '&:hover': {
+    backgroundColor: FOCUS_LAVENDER,
+    borderColor: FOCUS_LAVENDER
+  }
+});
+
+const SubmitButtonWrapper = styled('div')({
+  display: 'flex',
+  justifyContent: 'center'
+});
+
+const NewPost = () => {
+  const { router } = Router;
+  const route = router.asPath;
+
+  return (
+    <StyledContainer>
+      <Title>
+        {route === NEW_POST ? (
+          <Fragment>
+            Submit a post!<CowboyEmoji>🤠</CowboyEmoji>
+          </Fragment>
+        ) : (
+          'cool boys'
+        )}
+      </Title>
+      <StyledPanel>
+        <Label>Link</Label>
+        <Input type="text" />
+        <SubmitButtonWrapper>
+          <SubmitButton
+            onClick={() => {
+              Router.pushRoute('/posts/new/submission');
+            }}
+          >
+            Next
+          </SubmitButton>
+        </SubmitButtonWrapper>
+      </StyledPanel>
+    </StyledContainer>
+  );
+};
 
 export default NewPost;

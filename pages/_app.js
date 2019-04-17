@@ -8,6 +8,7 @@ import Page from '../components/Page';
 class MyApp extends App {
   // static async getInitialProps({ Component, ctx }) {
   static async getInitialProps(ctx) {
+    console.log('COOOL BRO', ctx);
     // console.log('ctxbro', ctx);s
     // console.log()
     // let pageProps = {};

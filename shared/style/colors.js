@@ -5,6 +5,7 @@ export const GUNSMOKE = '#999';
 export const ALABASTER = '#F8F8F8';
 export const LILAC = '#E8E8E8';
 export const LAVENDER = '#DAC4FF';
+export const FOCUS_LAVENDER = '#af80ff';
 export const RUBY = '#ff2e63';
 export const BLUSH = '#f38181';
 
