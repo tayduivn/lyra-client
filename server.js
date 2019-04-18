@@ -15,13 +15,15 @@ const ssrCache = new LRUCache({
 const renderAndCache = routes.getRequestHandler(
   app,
   ({ req, res, route, query }) => {
-    if (ssrCache.has(req.url)) {
-      return res.send(ssrCache.get(req.url));
-    }
+    console.log('route on server', route);
+    // if (ssrCache.has(req.url)) {
+    //   return res.send(ssrCache.get(req.url));
+    // }
+
     app
       .renderToHTML(req, res, route.page, query)
       .then(html => {
-        ssrCache.set(req.url, html);
+        // ssrCache.set(req.url, html);
         res.send(html);
       })
       .catch(err => {

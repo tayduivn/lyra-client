@@ -8,7 +8,7 @@ import Page from '../components/Page';
 class MyApp extends App {
   // static async getInitialProps({ Component, ctx }) {
   static async getInitialProps(ctx) {
-    console.log('COOOL BRO', ctx);
+    // console.log('COOOL BRO', ctx);
     // console.log('ctxbro', ctx);s
     // console.log()
     // let pageProps = {};
@@ -20,12 +20,12 @@ class MyApp extends App {
     // return { pageProps };
   }
   render() {
-    const { Component, pageProps, apolloClient } = this.props;
+    const { Component, pageProps, apolloClient, router } = this.props;
     return (
       <Container>
         <ApolloProvider client={apolloClient}>
           <Page>
-            <Component {...pageProps} client={apolloClient} />
+            <Component {...pageProps} router={router} client={apolloClient} />
           </Page>
         </ApolloProvider>
       </Container>
