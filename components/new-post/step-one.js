@@ -6,6 +6,8 @@ import { BASE_TEXT, TITLE_TEXT, WEIGHT } from '../../shared/style/typography';
 import { LAVENDER, FOCUS_LAVENDER, WHITE } from '../../shared/style/colors';
 import { Router } from '../../routes';
 import { Container } from '../../shared/library/components/layout';
+import { Title } from '../../shared/library/components/typography';
+import { NEW_POST_STEP_TWO } from '../../shared/constants/routes';
 import Panel from '../../shared/library/containers/panel';
 
 const StyledContainer = styled(Container)({
@@ -26,13 +28,6 @@ const CowboyEmoji = styled('div')({
   '&::after': {
     content: ''
   }
-});
-
-const Title = styled('h1')({
-  ...TITLE_TEXT,
-  fontSize: 26,
-  margin: '30px 0 30px 0',
-  display: 'flex'
 });
 
 const Label = styled('div')({
@@ -85,7 +80,7 @@ const StepOne = ({ setLinkCallback }) => {
           <SubmitButton
             onClick={() => {
               setLinkCallback(link);
-              Router.pushRoute('/posts/new/submission');
+              Router.pushRoute(NEW_POST_STEP_TWO);
             }}
           >
             Next
