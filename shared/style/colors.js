@@ -8,6 +8,7 @@ export const LAVENDER = '#DAC4FF';
 export const FOCUS_LAVENDER = '#af80ff';
 export const RUBY = '#ff2e63';
 export const BLUSH = '#f38181';
+export const DETROIT = '#757575';
 
 // '#08d9d6'
 // '#252a34'
