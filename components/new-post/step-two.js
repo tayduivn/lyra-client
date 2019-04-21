@@ -1,11 +1,18 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import Select from 'react-select';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
-import { DETROIT } from '../../shared/style/colors';
+import { DETROIT, LILAC, POWDER_BLUE, BLUSH } from '../../shared/style/colors';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' }
+];
 
 const StyledContainer = styled(Container)({
   flexDirection: 'column'
@@ -27,8 +34,48 @@ const Field = styled('div')({
   marginBottom: 20
 });
 
+const InputWrapper = styled('div')({
+  position: 'relative'
+});
+
+const Input = styled('input')(
+  {
+    ...BASE_TEXT,
+    outline: 'none',
+    padding: 10,
+    paddingRight: 50,
+    borderRadius: 3,
+    boxSizing: 'border-box',
+    // border: `1px solid ${LILAC}`,
+    border: '1px solid',
+    height: 35,
+    width: '100%'
+    // '&:hover': {
+    //   borderColor: POWDER_BLUE
+    // }
+  },
+  ({ valid }) => ({
+    borderColor: valid ? LILAC : BLUSH,
+    '&:hover': {
+      borderColor: valid ? POWDER_BLUE : BLUSH
+    }
+  })
+);
+
+const CharacterCounter = styled('span')({
+  ...BASE_TEXT,
+  fontSize: 11,
+  color: DETROIT,
+  position: 'absolute',
+  bottom: 1,
+  right: 2,
+  padding: '0 2px',
+  borderRadius: '3px 0 0 0',
+  lineHeight: '16px'
+});
+
 const Label = styled('div')({
-  marginBotton: 10,
+  marginBottom: 10,
   display: 'flex'
 });
 
@@ -43,7 +90,17 @@ const LabelQualifier = styled('span')({
   color: DETROIT
 });
 
+const INPUT_CHANGE = 'input-change';
+
 const StepTwo = ({ link }) => {
+  const nameMaxCharacters = 40;
+  const descriptionMaxCharacters = 60;
+  const [name, setName] = useState('');
+  const [nameIsValid, setNameIsValid] = useState(true);
+  const [description, setDescription] = useState('');
+  const [descriptionIsValid, setDescriptionIsValid] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [topics, setTopics] = useState([]);
   return (
     <StyledContainer>
       <Title>Tell us more about this post 😃</Title>
@@ -55,6 +112,72 @@ const StepTwo = ({ link }) => {
                 Name of the product<LabelQualifier> - Required</LabelQualifier>
               </LabelName>
             </Label>
+            <InputWrapper>
+              <Input
+                onChange={e => {
+                  const { value } = e.target;
+                  setName(value);
+                  if (value.length > nameMaxCharacters) {
+                    setNameIsValid(false);
+                  } else {
+                    setNameIsValid(true);
+                  }
+                }}
+                type="text"
+                valid={nameIsValid}
+                placeholder="Simply the name of the product"
+              />
+              <CharacterCounter>{`${
+                name.length
+              }/${nameMaxCharacters}`}</CharacterCounter>
+            </InputWrapper>
+          </Field>
+          <Field>
+            <Label>
+              <LabelName>
+                Tagline<LabelQualifier> - Required</LabelQualifier>
+              </LabelName>
+            </Label>
+            <InputWrapper>
+              <Input
+                onChange={e => {
+                  const { value } = e.target;
+                  setDescription(value);
+                  if (value.length > descriptionMaxCharacters) {
+                    setDescriptionIsValid(false);
+                  } else {
+                    setDescriptionIsValid(true);
+                  }
+                }}
+                type="text"
+                valid={descriptionIsValid}
+                placeholder="Concise and descriptive tagline for the product"
+              />
+              <CharacterCounter>{`${
+                description.length
+              }/${descriptionMaxCharacters}`}</CharacterCounter>
+            </InputWrapper>
+          </Field>
+          <Field>
+            <Label>
+              <LabelName>Topics</LabelName>
+            </Label>
+            <Select
+              value={topics}
+              openOnFocus={false}
+              isMulti={true}
+              menuIsOpen={menuOpen}
+              onBlur={() => setMenuOpen(false)}
+              onChange={selectedOption => {
+                setTopics(selectedOption);
+              }}
+              onInputChange={(query, { action }) => {
+                if (action === INPUT_CHANGE) {
+                  setMenuOpen(true);
+                }
+              }}
+              options={options}
+            />
           </Field>
         </StyledPanel>
         <Preview>Cool Bro</Preview>
