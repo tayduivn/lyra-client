@@ -7,6 +7,8 @@ import { DETROIT, LILAC, POWDER_BLUE, BLUSH } from '../../shared/style/colors';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
+import { Query } from 'react-apollo';
+import { TOPICS_QUERY } from '../../data/queries';
 
 const options = [
   { value: 'chocolate', label: 'Chocolate' },
@@ -46,13 +48,9 @@ const Input = styled('input')(
     paddingRight: 50,
     borderRadius: 3,
     boxSizing: 'border-box',
-    // border: `1px solid ${LILAC}`,
     border: '1px solid',
     height: 35,
     width: '100%'
-    // '&:hover': {
-    //   borderColor: POWDER_BLUE
-    // }
   },
   ({ valid }) => ({
     borderColor: valid ? LILAC : BLUSH,
@@ -92,6 +90,34 @@ const LabelQualifier = styled('span')({
 
 const INPUT_CHANGE = 'input-change';
 
+const normalizeTopics = topics => {
+  return topics.map(({ name, slug }) => ({
+    value: slug,
+    label: name
+  }));
+};
+
+const selectStyles = {};
+
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    borderBottom: '1px dotted pink',
+    color: state.isSelected ? 'red' : 'blue',
+    padding: 20
+  }),
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: 200
+  }),
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = 'opacity 300ms';
+
+    return { ...provided, opacity, transition };
+  }
+};
+
 const StepTwo = ({ link }) => {
   const nameMaxCharacters = 40;
   const descriptionMaxCharacters = 60;
@@ -100,7 +126,8 @@ const StepTwo = ({ link }) => {
   const [description, setDescription] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [topics, setTopics] = useState([]);
+  const [selectedTopics, setSelectedTopics] = useState([]);
+
   return (
     <StyledContainer>
       <Title>Tell us more about this post 😃</Title>
@@ -162,22 +189,28 @@ const StepTwo = ({ link }) => {
             <Label>
               <LabelName>Topics</LabelName>
             </Label>
-            <Select
-              value={topics}
-              openOnFocus={false}
-              isMulti={true}
-              menuIsOpen={menuOpen}
-              onBlur={() => setMenuOpen(false)}
-              onChange={selectedOption => {
-                setTopics(selectedOption);
-              }}
-              onInputChange={(query, { action }) => {
-                if (action === INPUT_CHANGE) {
-                  setMenuOpen(true);
-                }
-              }}
-              options={options}
-            />
+            <Query query={TOPICS_QUERY}>
+              {({ data: { topics } }) => (
+                <Select
+                  styles={selectStyles}
+                  value={selectedTopics}
+                  openOnFocus={false}
+                  isMulti={true}
+                  // menuIsOpen={menuOpen}
+                  noOptionsMessage={() => 'No topics found'}
+                  // onBlur={() => setMenuOpen(false)}
+                  onChange={selectedOption => {
+                    setSelectedTopics(selectedOption);
+                  }}
+                  onInputChange={(query, { action }) => {
+                    // if (action === INPUT_CHANGE) {
+                    //   setMenuOpen(true);
+                    // }
+                  }}
+                  options={normalizeTopics(topics)}
+                />
+              )}
+            </Query>
           </Field>
         </StyledPanel>
         <Preview>Cool Bro</Preview>

@@ -26,19 +26,12 @@ export const FEED_QUERY = gql`
   }
 `;
 
-export const postsQuery = gql`
-  query posts($first: Int!, $skip: Int!) {
-    posts(first: $first, skip: $skip) {
+export const TOPICS_QUERY = gql`
+  query topics {
+    topics {
       id
       name
       slug
-      description
-      imageUrl
-      topics {
-        id
-        name
-        slug
-      }
     }
   }
 `;
