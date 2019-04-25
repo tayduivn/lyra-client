@@ -2,19 +2,14 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Select from 'react-select';
+import { Query } from 'react-apollo';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import { DETROIT, LILAC, POWDER_BLUE, BLUSH } from '../../shared/style/colors';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
-import { Query } from 'react-apollo';
-import { TOPICS_QUERY } from '../../data/queries';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' }
-];
+import { TOPICS_QUERY } from '../../data/queries';
 
 const StyledContainer = styled(Container)({
   flexDirection: 'column'
@@ -97,8 +92,30 @@ const normalizeTopics = topics => {
   }));
 };
 
-const selectStyles = {};
-
+const selectStyles = {
+  indicatorsContainer: provided => {
+    return { display: 'none' };
+  },
+  placeholder: provided => ({
+    ...provided,
+    ...BASE_TEXT
+  }),
+  control: provided => {
+    console.log('provided', provided);
+    return {
+      ...provided,
+      borderRadius: 3,
+      borderColor: LILAC,
+      boxShadow: 'none',
+      // padding: 10,
+      // minHeight: 42,
+      '&:hover': {
+        borderColor: POWDER_BLUE
+      },
+      ' > div:first-of-type': {}
+    };
+  }
+};
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
@@ -106,6 +123,10 @@ const customStyles = {
     color: state.isSelected ? 'red' : 'blue',
     padding: 20
   }),
+  indicatorsContainer: provided => {
+    console.log('provided', provided);
+    return { ...provided };
+  },
   control: () => ({
     // none of react-select's styles are passed to <Control />
     width: 200
@@ -190,25 +211,30 @@ const StepTwo = ({ link }) => {
               <LabelName>Topics</LabelName>
             </Label>
             <Query query={TOPICS_QUERY}>
-              {({ data: { topics } }) => (
-                <Select
-                  styles={selectStyles}
-                  value={selectedTopics}
-                  openOnFocus={false}
-                  isMulti={true}
-                  // menuIsOpen={menuOpen}
-                  noOptionsMessage={() => 'No topics found'}
-                  // onBlur={() => setMenuOpen(false)}
-                  onChange={selectedOption => {
-                    setSelectedTopics(selectedOption);
-                  }}
-                  onInputChange={(query, { action }) => {
-                    // if (action === INPUT_CHANGE) {
-                    //   setMenuOpen(true);
-                    // }
-                  }}
-                  options={normalizeTopics(topics)}
-                />
+              {({ loading, data: { topics } }) => (
+                <Fragment>
+                  {!loading && (
+                    <Select
+                      styles={selectStyles}
+                      value={selectedTopics}
+                      openOnFocus={false}
+                      isMulti={true}
+                      menuIsOpen={true}
+                      noOptionsMessage={() => 'No topics found'}
+                      // onBlur={() => setMenuOpen(false)}
+                      onChange={selectedOption => {
+                        setSelectedTopics(selectedOption);
+                      }}
+                      onInputChange={(query, { action }) => {
+                        // if (action === INPUT_CHANGE) {
+                        //   setMenuOpen(true);
+                        // }
+                      }}
+                      // options={options}
+                      options={normalizeTopics(topics)}
+                    />
+                  )}
+                </Fragment>
               )}
             </Query>
           </Field>
