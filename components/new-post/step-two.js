@@ -4,7 +4,14 @@ import styled from '@emotion/styled';
 import Select from 'react-select';
 import { Query } from 'react-apollo';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
-import { DETROIT, LILAC, POWDER_BLUE, BLUSH } from '../../shared/style/colors';
+import {
+  DETROIT,
+  WHITE,
+  ALABASTER,
+  LILAC,
+  POWDER_BLUE,
+  BLUSH
+} from '../../shared/style/colors';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
@@ -45,7 +52,11 @@ const Input = styled('input')(
     boxSizing: 'border-box',
     border: '1px solid',
     height: 35,
-    width: '100%'
+    width: '100%',
+    '&:disabled': {
+      cursor: 'not-allowed',
+      backgroundColor: ALABASTER
+    }
   },
   ({ valid }) => ({
     borderColor: valid ? LILAC : BLUSH,
@@ -100,42 +111,37 @@ const selectStyles = {
     ...provided,
     ...BASE_TEXT
   }),
+  multiValue: provided => ({
+    ...provided,
+    ...BASE_TEXT
+  }),
+  option: provided => ({
+    ...provided,
+    ...BASE_TEXT,
+    cursor: 'pointer',
+    backgroundColor: WHITE,
+    '&:hover': {
+      backgroundColor: LILAC
+    }
+  }),
+  menu: provided => ({
+    ...provided,
+    width: 'auto',
+    ' > div': {
+      padding: 0
+    }
+  }),
   control: provided => {
-    console.log('provided', provided);
     return {
       ...provided,
       borderRadius: 3,
       borderColor: LILAC,
       boxShadow: 'none',
-      // padding: 10,
-      // minHeight: 42,
       '&:hover': {
         borderColor: POWDER_BLUE
       },
       ' > div:first-of-type': {}
     };
-  }
-};
-const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    borderBottom: '1px dotted pink',
-    color: state.isSelected ? 'red' : 'blue',
-    padding: 20
-  }),
-  indicatorsContainer: provided => {
-    console.log('provided', provided);
-    return { ...provided };
-  },
-  control: () => ({
-    // none of react-select's styles are passed to <Control />
-    width: 200
-  }),
-  singleValue: (provided, state) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
-
-    return { ...provided, opacity, transition };
   }
 };
 
@@ -219,7 +225,7 @@ const StepTwo = ({ link }) => {
                       value={selectedTopics}
                       openOnFocus={false}
                       isMulti={true}
-                      menuIsOpen={true}
+                      // menuIsOpen={true}
                       noOptionsMessage={() => 'No topics found'}
                       // onBlur={() => setMenuOpen(false)}
                       onChange={selectedOption => {
@@ -238,8 +244,19 @@ const StepTwo = ({ link }) => {
               )}
             </Query>
           </Field>
+          <Field>
+            <Label>
+              <LabelName>
+                Download link
+                <LabelQualifier> - App Store, Google Play…</LabelQualifier>
+              </LabelName>
+            </Label>
+            <InputWrapper>
+              <Input type="text" value={link} valid={true} disabled />
+            </InputWrapper>
+          </Field>
         </StyledPanel>
-        <Preview>Cool Bro</Preview>
+        {/* <Preview>Cool Bro</Preview> */}
       </Content>
     </StyledContainer>
   );
