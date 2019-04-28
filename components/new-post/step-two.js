@@ -1,9 +1,12 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Select from 'react-select';
+import { useDropzone } from 'react-dropzone';
 import { Query } from 'react-apollo';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
+import { TABLET } from '../../shared/style/breakpoints';
+import ThumbnailPlaceholderIcon from '../../shared/style/icons/thumbnail-placeholder.svg';
 import {
   DETROIT,
   WHITE,
@@ -18,8 +21,19 @@ import Panel from '../../shared/library/containers/panel';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
+const THUMBNAIL_SIZE = 80;
+
 const StyledContainer = styled(Container)({
-  flexDirection: 'column'
+  flexDirection: 'column',
+  [TABLET]: {
+    padding: '0 10px 0 10px'
+  }
+});
+
+const StyledTitle = styled(Title)({
+  [TABLET]: {
+    justifyContent: 'center'
+  }
 });
 
 const StyledPanel = styled(Panel)({
@@ -145,6 +159,82 @@ const selectStyles = {
   }
 };
 
+const thumbsContainer = {
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  marginTop: 16
+};
+
+const thumb = {
+  display: 'inline-flex',
+  borderRadius: 2,
+  border: '1px solid #eaeaea',
+  marginBottom: 8,
+  marginRight: 8,
+  width: 100,
+  height: 100,
+  padding: 4,
+  boxSizing: 'border-box'
+};
+
+const thumbInner = {
+  display: 'flex',
+  minWidth: 0,
+  overflow: 'hidden'
+};
+
+const img = {
+  display: 'block',
+  width: 'auto',
+  height: '100%'
+};
+
+const ThumbnailDropTargetContainer = styled('div')({
+  height: THUMBNAIL_SIZE,
+  width: THUMBNAIL_SIZE,
+  borderRadius: 3,
+  ' > div': {
+    '&:focus': {
+      outline: 'none'
+    }
+  }
+});
+
+const ThumbnailPlaceholder = styled('div')({
+  height: THUMBNAIL_SIZE,
+  width: THUMBNAIL_SIZE,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  border: `1px dashed ${LILAC}`,
+  ' > div': {
+    '&:focus': {
+      outline: 'none'
+    }
+  }
+});
+
+const StyledThumbnailPlaceholderIcon = styled(ThumbnailPlaceholderIcon)({
+  cursor: 'pointer',
+  '&:focus': {
+    outline: 'none'
+  },
+  '&:hover': {
+    opacity: 0.5
+  }
+});
+
+const ThumbnailContainer = styled('div')({
+  height: THUMBNAIL_SIZE,
+  width: THUMBNAIL_SIZE
+});
+
+const Thumbnail = styled('img')({
+  maxWidth: THUMBNAIL_SIZE,
+  maxHeight: THUMBNAIL_SIZE
+});
+
 const StepTwo = ({ link }) => {
   const nameMaxCharacters = 40;
   const descriptionMaxCharacters = 60;
@@ -152,12 +242,34 @@ const StepTwo = ({ link }) => {
   const [nameIsValid, setNameIsValid] = useState(true);
   const [description, setDescription] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState([]);
+
+  const [files, setFiles] = useState([]);
+
+  const [thumbnail, setThumbnail] = useState(null);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: 'image/*',
+    onDrop: acceptedFiles => {
+      const file = acceptedFiles[0];
+      Object.assign(file, {
+        preview: URL.createObjectURL(file)
+      });
+      setThumbnail(file);
+    }
+  });
+
+  const thumbs = files.map(file => (
+    <div style={thumb} key={file.name}>
+      <div style={thumbInner}>
+        <img src={file.preview} style={img} />
+      </div>
+    </div>
+  ));
 
   return (
     <StyledContainer>
-      <Title>Tell us more about this post 😃</Title>
+      <StyledTitle>Tell us more about this post 😃</StyledTitle>
       <Content>
         <StyledPanel>
           <Field>
@@ -254,6 +366,32 @@ const StepTwo = ({ link }) => {
             <InputWrapper>
               <Input type="text" value={link} valid={true} disabled />
             </InputWrapper>
+          </Field>
+          <Field>
+            <Label>
+              <LabelName>
+                Thumbnail
+                <LabelQualifier> - Required</LabelQualifier>
+              </LabelName>
+            </Label>
+
+            <ThumbnailDropTargetContainer>
+              {!thumbnail && (
+                <ThumbnailPlaceholder>
+                  <div {...getRootProps({ className: 'dropzone' })}>
+                    <input {...getInputProps()} />
+                    <StyledThumbnailPlaceholderIcon />
+                  </div>
+                </ThumbnailPlaceholder>
+              )}
+              {thumbnail && (
+                <ThumbnailContainer>
+                  <Thumbnail src={thumbnail.preview} />
+                </ThumbnailContainer>
+              )}
+            </ThumbnailDropTargetContainer>
+
+            <aside style={thumbsContainer}>{thumbs}</aside>
           </Field>
         </StyledPanel>
         {/* <Preview>Cool Bro</Preview> */}
