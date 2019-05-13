@@ -1,5 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import { withApollo } from 'react-apollo';
 import styled from '@emotion/styled';
 import Select from 'react-select';
 import { useDropzone } from 'react-dropzone';
@@ -15,6 +17,7 @@ import {
   POWDER_BLUE,
   BLUSH
 } from '../../shared/style/colors';
+import { SIGN_UPLOAD } from '../../data/mutations';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
@@ -235,7 +238,7 @@ const Thumbnail = styled('img')({
   maxHeight: THUMBNAIL_SIZE
 });
 
-const StepTwo = ({ link }) => {
+const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
   const descriptionMaxCharacters = 60;
   const [name, setName] = useState('');
@@ -256,6 +259,17 @@ const StepTwo = ({ link }) => {
         preview: URL.createObjectURL(file)
       });
       setThumbnail(file);
+      console.log('file', file);
+      client
+        .mutate({
+          mutation: SIGN_UPLOAD,
+          variables: { fileName: file.name, fileType: file.type }
+        })
+        .then(({ data }) => {
+          console.log('data from signed upload', data);
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch(err => {});
     }
   });
 
@@ -391,6 +405,18 @@ const StepTwo = ({ link }) => {
               )}
             </ThumbnailDropTargetContainer>
 
+            <button
+              onClick={() => {
+                console.log('upload image');
+                console.log('Preparing the upload');
+                axios.post('http://localhost:4000/sign_s3').then(response => {
+                  console.log('this is the response', response);
+                });
+              }}
+            >
+              Uplod
+            </button>
+
             <aside style={thumbsContainer}>{thumbs}</aside>
           </Field>
         </StyledPanel>
@@ -404,4 +430,4 @@ StepTwo.propTypes = {
   link: PropTypes.string
 };
 
-export default StepTwo;
+export default withApollo(StepTwo);
