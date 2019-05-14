@@ -259,17 +259,37 @@ const StepTwo = ({ link, client }) => {
         preview: URL.createObjectURL(file)
       });
       setThumbnail(file);
-      console.log('file', file);
       client
         .mutate({
           mutation: SIGN_UPLOAD,
           variables: { fileName: file.name, fileType: file.type }
         })
-        .then(({ data }) => {
-          console.log('data from signed upload', data);
+        .then(({ data: { signUpload } }) => {
+          // url
+          // const { signedRequest } = signUpload;
+          const options = {
+            headers: {
+              'Content-Type': file.type,
+              'x-amz-acl': 'public-read'
+            }
+          };
+          console.log('cool test test', signUpload);
+          console.log('access url', signUpload.url);
+          axios
+            .put(signUpload.signedRequest, file, options)
+            .then(result => {
+              console.log('Response from s3', result);
+              // this.setState({ success: true });
+            })
+            .catch(error => {
+              alert('ERROR ' + JSON.stringify(error));
+            });
+          // console.log('data from signed upload', data);
         })
         // eslint-disable-next-line no-unused-vars
-        .catch(err => {});
+        .catch(err => {
+          console.log('ERR', err);
+        });
     }
   });
 
