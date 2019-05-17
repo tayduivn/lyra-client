@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import SimpleButton from '../../shared/library/components/buttons/simple';
-import { BASE_TEXT, TITLE_TEXT, WEIGHT } from '../../shared/style/typography';
-import { LAVENDER, FOCUS_LAVENDER, WHITE } from '../../shared/style/colors';
+import StyledButton from '../../shared/library/components/buttons/styled';
+import { BASE_TEXT, TITLE_TEXT } from '../../shared/style/typography';
 import { Router } from '../../routes';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
@@ -45,18 +44,6 @@ const Input = styled('input')({
   border: '1px solid #e8e8e8'
 });
 
-const SubmitButton = styled(SimpleButton)({
-  marginTop: 10,
-  borderColor: LAVENDER,
-  backgroundColor: LAVENDER,
-  color: WHITE,
-  fontWeight: WEIGHT.BOLD,
-  '&:hover': {
-    backgroundColor: FOCUS_LAVENDER,
-    borderColor: FOCUS_LAVENDER
-  }
-});
-
 const SubmitButtonWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'center'
@@ -77,14 +64,14 @@ const StepOne = ({ setLinkCallback }) => {
           onInput={e => setLink(e.target.value)}
         />
         <SubmitButtonWrapper>
-          <SubmitButton
+          <StyledButton
             onClick={() => {
               setLinkCallback(link);
               Router.pushRoute(NEW_POST_STEP_TWO);
             }}
           >
             Next
-          </SubmitButton>
+          </StyledButton>
         </SubmitButtonWrapper>
       </StyledPanel>
     </StyledContainer>

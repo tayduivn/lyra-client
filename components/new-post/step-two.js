@@ -21,6 +21,7 @@ import { SIGN_UPLOAD } from '../../data/mutations';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
+import StyledButton from '../../shared/library/components/buttons/styled';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
@@ -48,7 +49,10 @@ const Content = styled('div')({
 });
 
 const Preview = styled('div')({
-  flex: 1
+  flex: 1,
+  [TABLET]: {
+    display: 'none'
+  }
 });
 
 const Field = styled('div')({
@@ -238,6 +242,16 @@ const Thumbnail = styled('img')({
   maxHeight: THUMBNAIL_SIZE
 });
 
+const Actions = styled('div')({
+  display: 'flex'
+});
+
+const NextButton = styled(StyledButton)({
+  marginLeft: 'auto'
+});
+
+const uploadImage = (client, file) => {};
+
 const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
   const descriptionMaxCharacters = 60;
@@ -246,6 +260,7 @@ const StepTwo = ({ link, client }) => {
   const [description, setDescription] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
   const [selectedTopics, setSelectedTopics] = useState([]);
+  const [screen, setScreen] = useState(1);
 
   const [files, setFiles] = useState([]);
 
@@ -293,155 +308,173 @@ const StepTwo = ({ link, client }) => {
     }
   });
 
-  const thumbs = files.map(file => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img src={file.preview} style={img} />
-      </div>
-    </div>
-  ));
-
   return (
     <StyledContainer>
-      <StyledTitle>Tell us more about this post 😃</StyledTitle>
-      <Content>
-        <StyledPanel>
-          <Field>
-            <Label>
-              <LabelName>
-                Name of the product<LabelQualifier> - Required</LabelQualifier>
-              </LabelName>
-            </Label>
-            <InputWrapper>
-              <Input
-                onChange={e => {
-                  const { value } = e.target;
-                  setName(value);
-                  if (value.length > nameMaxCharacters) {
-                    setNameIsValid(false);
-                  } else {
-                    setNameIsValid(true);
-                  }
-                }}
-                type="text"
-                valid={nameIsValid}
-                placeholder="Simply the name of the product"
-              />
-              <CharacterCounter>{`${
-                name.length
-              }/${nameMaxCharacters}`}</CharacterCounter>
-            </InputWrapper>
-          </Field>
-          <Field>
-            <Label>
-              <LabelName>
-                Tagline<LabelQualifier> - Required</LabelQualifier>
-              </LabelName>
-            </Label>
-            <InputWrapper>
-              <Input
-                onChange={e => {
-                  const { value } = e.target;
-                  setDescription(value);
-                  if (value.length > descriptionMaxCharacters) {
-                    setDescriptionIsValid(false);
-                  } else {
-                    setDescriptionIsValid(true);
-                  }
-                }}
-                type="text"
-                valid={descriptionIsValid}
-                placeholder="Concise and descriptive tagline for the product"
-              />
-              <CharacterCounter>{`${
-                description.length
-              }/${descriptionMaxCharacters}`}</CharacterCounter>
-            </InputWrapper>
-          </Field>
-          <Field>
-            <Label>
-              <LabelName>Topics</LabelName>
-            </Label>
-            <Query query={TOPICS_QUERY}>
-              {({ loading, data: { topics } }) => (
-                <Fragment>
-                  {!loading && (
-                    <Select
-                      styles={selectStyles}
-                      value={selectedTopics}
-                      openOnFocus={false}
-                      isMulti={true}
-                      // menuIsOpen={true}
-                      noOptionsMessage={() => 'No topics found'}
-                      // onBlur={() => setMenuOpen(false)}
-                      onChange={selectedOption => {
-                        setSelectedTopics(selectedOption);
-                      }}
-                      onInputChange={(query, { action }) => {
-                        // if (action === INPUT_CHANGE) {
-                        //   setMenuOpen(true);
-                        // }
-                      }}
-                      // options={options}
-                      options={normalizeTopics(topics)}
-                    />
+      {screen === 1 && (
+        <Fragment>
+          <StyledTitle>Tell us more about this post 😃</StyledTitle>
+          <Content>
+            <StyledPanel>
+              <Field>
+                <Label>
+                  <LabelName>
+                    Name of the product
+                    <LabelQualifier> - Required</LabelQualifier>
+                  </LabelName>
+                </Label>
+                <InputWrapper>
+                  <Input
+                    onChange={e => {
+                      const { value } = e.target;
+                      setName(value);
+                      if (value.length > nameMaxCharacters) {
+                        setNameIsValid(false);
+                      } else {
+                        setNameIsValid(true);
+                      }
+                    }}
+                    type="text"
+                    valid={nameIsValid}
+                    placeholder="Simply the name of the product"
+                  />
+                  <CharacterCounter>{`${
+                    name.length
+                  }/${nameMaxCharacters}`}</CharacterCounter>
+                </InputWrapper>
+              </Field>
+              <Field>
+                <Label>
+                  <LabelName>
+                    Tagline<LabelQualifier> - Required</LabelQualifier>
+                  </LabelName>
+                </Label>
+                <InputWrapper>
+                  <Input
+                    onChange={e => {
+                      const { value } = e.target;
+                      setDescription(value);
+                      if (value.length > descriptionMaxCharacters) {
+                        setDescriptionIsValid(false);
+                      } else {
+                        setDescriptionIsValid(true);
+                      }
+                    }}
+                    type="text"
+                    valid={descriptionIsValid}
+                    placeholder="Concise and descriptive tagline for the product"
+                  />
+                  <CharacterCounter>{`${
+                    description.length
+                  }/${descriptionMaxCharacters}`}</CharacterCounter>
+                </InputWrapper>
+              </Field>
+              <Field>
+                <Label>
+                  <LabelName>Topics</LabelName>
+                </Label>
+                <Query query={TOPICS_QUERY}>
+                  {({ loading, data: { topics } }) => (
+                    <Fragment>
+                      {!loading && (
+                        <Select
+                          styles={selectStyles}
+                          value={selectedTopics}
+                          openOnFocus={false}
+                          isMulti={true}
+                          // menuIsOpen={true}
+                          noOptionsMessage={() => 'No topics found'}
+                          // onBlur={() => setMenuOpen(false)}
+                          onChange={selectedOption => {
+                            setSelectedTopics(selectedOption);
+                          }}
+                          onInputChange={(query, { action }) => {
+                            // if (action === INPUT_CHANGE) {
+                            //   setMenuOpen(true);
+                            // }
+                          }}
+                          // options={options}
+                          options={normalizeTopics(topics)}
+                        />
+                      )}
+                    </Fragment>
                   )}
-                </Fragment>
-              )}
-            </Query>
-          </Field>
-          <Field>
-            <Label>
-              <LabelName>
-                Download link
-                <LabelQualifier> - App Store, Google Play…</LabelQualifier>
-              </LabelName>
-            </Label>
-            <InputWrapper>
-              <Input type="text" value={link} valid={true} disabled />
-            </InputWrapper>
-          </Field>
-          <Field>
-            <Label>
-              <LabelName>
-                Thumbnail
-                <LabelQualifier> - Required</LabelQualifier>
-              </LabelName>
-            </Label>
+                </Query>
+              </Field>
+              <Field>
+                <Label>
+                  <LabelName>
+                    Download link
+                    <LabelQualifier> - App Store, Google Play…</LabelQualifier>
+                  </LabelName>
+                </Label>
+                <InputWrapper>
+                  <Input type="text" value={link} valid={true} disabled />
+                </InputWrapper>
+              </Field>
+              <Field>
+                <Label>
+                  <LabelName>
+                    Thumbnail
+                    <LabelQualifier> - Required</LabelQualifier>
+                  </LabelName>
+                </Label>
 
-            <ThumbnailDropTargetContainer>
-              {!thumbnail && (
-                <ThumbnailPlaceholder>
-                  <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} />
-                    <StyledThumbnailPlaceholderIcon />
-                  </div>
-                </ThumbnailPlaceholder>
-              )}
-              {thumbnail && (
-                <ThumbnailContainer>
-                  <Thumbnail src={thumbnail.preview} />
-                </ThumbnailContainer>
-              )}
-            </ThumbnailDropTargetContainer>
-
-            <button
-              onClick={() => {
-                console.log('upload image');
-                console.log('Preparing the upload');
-                axios.post('http://localhost:4000/sign_s3').then(response => {
-                  console.log('this is the response', response);
-                });
-              }}
-            >
-              Uplod
-            </button>
-
-            <aside style={thumbsContainer}>{thumbs}</aside>
-          </Field>
-        </StyledPanel>
-        {/* <Preview>Cool Bro</Preview> */}
-      </Content>
+                <ThumbnailDropTargetContainer>
+                  {!thumbnail && (
+                    <ThumbnailPlaceholder>
+                      <div {...getRootProps({ className: 'dropzone' })}>
+                        <input {...getInputProps()} />
+                        <StyledThumbnailPlaceholderIcon />
+                      </div>
+                    </ThumbnailPlaceholder>
+                  )}
+                  {thumbnail && (
+                    <ThumbnailContainer>
+                      <Thumbnail src={thumbnail.preview} />
+                    </ThumbnailContainer>
+                  )}
+                </ThumbnailDropTargetContainer>
+              </Field>
+              <Field>
+                <Actions>
+                  <NextButton onClick={() => setScreen(2)}>Next</NextButton>
+                </Actions>
+              </Field>
+            </StyledPanel>
+            <Preview>Cool Bro</Preview>
+          </Content>
+        </Fragment>
+      )}
+      {screen === 2 && (
+        <Fragment>
+          <StyledTitle>✨ Let’s make this product look nice</StyledTitle>
+          <Content>
+            <StyledPanel>
+              <Field>
+                <Label>
+                  <LabelName>Gallery</LabelName>
+                </Label>
+                <ThumbnailDropTargetContainer>
+                  {!thumbnail && (
+                    <ThumbnailPlaceholder>
+                      <div {...getRootProps({ className: 'dropzone' })}>
+                        <input {...getInputProps()} />
+                        <StyledThumbnailPlaceholderIcon />
+                      </div>
+                    </ThumbnailPlaceholder>
+                  )}
+                  {thumbnail && (
+                    <ThumbnailContainer>
+                      <Thumbnail src={thumbnail.preview} />
+                    </ThumbnailContainer>
+                  )}
+                </ThumbnailDropTargetContainer>
+              </Field>
+            </StyledPanel>
+            <Preview>Cool Bro</Preview>
+          </Content>
+        </Fragment>
+      )}
     </StyledContainer>
   );
 };
