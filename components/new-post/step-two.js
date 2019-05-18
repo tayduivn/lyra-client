@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import uuidv4 from 'uuid/v4';
 import axios from 'axios';
 import { withApollo } from 'react-apollo';
 import styled from '@emotion/styled';
@@ -9,13 +10,17 @@ import { Query } from 'react-apollo';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import { TABLET } from '../../shared/style/breakpoints';
 import ThumbnailPlaceholderIcon from '../../shared/style/icons/thumbnail-placeholder.svg';
+import CircleCloseIcon from '../../shared/style/icons/circle-close.svg';
+import CircleDot from '../../shared/style/icons/circle-dot.svg';
 import {
   DETROIT,
   WHITE,
   ALABASTER,
   LILAC,
   POWDER_BLUE,
-  BLUSH
+  BLUSH,
+  LAVENDER,
+  FOCUS_LAVENDER
 } from '../../shared/style/colors';
 import { SIGN_UPLOAD } from '../../data/mutations';
 import { Container } from '../../shared/library/components/layout';
@@ -26,6 +31,7 @@ import StyledButton from '../../shared/library/components/buttons/styled';
 import { TOPICS_QUERY } from '../../data/queries';
 
 const THUMBNAIL_SIZE = 80;
+const STEPS = 3;
 
 const StyledContainer = styled(Container)({
   flexDirection: 'column',
@@ -198,9 +204,7 @@ const img = {
 };
 
 const ThumbnailDropTargetContainer = styled('div')({
-  height: THUMBNAIL_SIZE,
-  width: THUMBNAIL_SIZE,
-  borderRadius: 3,
+  display: 'flex',
   ' > div': {
     '&:focus': {
       outline: 'none'
@@ -208,19 +212,25 @@ const ThumbnailDropTargetContainer = styled('div')({
   }
 });
 
-const ThumbnailPlaceholder = styled('div')({
-  height: THUMBNAIL_SIZE,
-  width: THUMBNAIL_SIZE,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: `1px dashed ${LILAC}`,
-  ' > div': {
-    '&:focus': {
-      outline: 'none'
+const ThumbnailPlaceholder = styled('div')(
+  {
+    maxHeight: THUMBNAIL_SIZE,
+    maxWidth: THUMBNAIL_SIZE,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: `1px dashed ${LILAC}`,
+    ' > div': {
+      '&:focus': {
+        outline: 'none'
+      }
     }
-  }
-});
+  },
+  ({ width = THUMBNAIL_SIZE, height = THUMBNAIL_SIZE }) => ({
+    width: width,
+    height: height
+  })
+);
 
 const StyledThumbnailPlaceholderIcon = styled(ThumbnailPlaceholderIcon)({
   cursor: 'pointer',
@@ -232,9 +242,17 @@ const StyledThumbnailPlaceholderIcon = styled(ThumbnailPlaceholderIcon)({
   }
 });
 
+const StyledCircleCloseIcon = styled(CircleCloseIcon)({
+  cursor: 'pointer',
+  position: 'absolute',
+  top: -7,
+  right: -7
+});
+
 const ThumbnailContainer = styled('div')({
-  height: THUMBNAIL_SIZE,
-  width: THUMBNAIL_SIZE
+  position: 'relative',
+  maxHeight: THUMBNAIL_SIZE,
+  maxWidth: THUMBNAIL_SIZE
 });
 
 const Thumbnail = styled('img')({
@@ -250,6 +268,66 @@ const NextButton = styled(StyledButton)({
   marginLeft: 'auto'
 });
 
+const UploadWrapper = styled('div')({
+  position: 'relative'
+});
+
+const LoadingOverlay = styled('div')({
+  // position: 'absolute',
+  // top: 0,
+  // right: 0,
+  // bottom: 0,
+  // left: 0
+});
+
+const TextButton = styled('button')({
+  ...BASE_TEXT,
+  fontWeight: WEIGHT.BOLD,
+  color: FOCUS_LAVENDER,
+  cursor: 'pointer',
+  border: 'none',
+  background: '0 0',
+  padding: 0,
+  '&:hover': {
+    textDecoration: 'underline'
+  }
+});
+
+const UploadDetails = styled('div')({
+  marginLeft: 10,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between'
+});
+
+const UploadActions = styled('div')({
+  display: 'flex'
+});
+
+const ActionDivider = styled('div')({
+  ...BASE_TEXT,
+  color: DETROIT,
+  marginLeft: 5,
+  marginRight: 5
+});
+
+const UploadCriteria = styled('div')({
+  ...BASE_TEXT,
+  color: DETROIT
+});
+
+const StyledCircleDot = styled(CircleDot)(
+  {
+    marginRight: 10
+  },
+  ({ disabled = true }) => ({
+    cursor: disabled ? 'default' : 'pointer',
+    opacity: disabled ? 0.5 : 1
+  })
+);
+
+const StepsContainer = styled('div')({});
+
 const uploadImage = (client, file) => {};
 
 const StepTwo = ({ link, client }) => {
@@ -260,11 +338,27 @@ const StepTwo = ({ link, client }) => {
   const [description, setDescription] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
   const [selectedTopics, setSelectedTopics] = useState([]);
-  const [screen, setScreen] = useState(1);
+  const [step, setStep] = useState(1);
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
 
   const [files, setFiles] = useState([]);
 
   const [thumbnail, setThumbnail] = useState(null);
+
+  const stepButtons = [];
+  for (let i = 0; i < STEPS; i++) {
+    const isDisabled = i + 2 > step;
+    stepButtons.push(
+      <StyledCircleDot
+        onClick={() => {
+          if (!isDisabled) {
+            setStep(i + 1);
+          }
+        }}
+        disabled={isDisabled}
+      />
+    );
+  }
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
@@ -273,15 +367,15 @@ const StepTwo = ({ link, client }) => {
       Object.assign(file, {
         preview: URL.createObjectURL(file)
       });
-      setThumbnail(file);
+      // setThumbnail(file);
+      setUploadingThumbnail(true);
+      const fileName = uuidv4();
       client
         .mutate({
           mutation: SIGN_UPLOAD,
-          variables: { fileName: file.name, fileType: file.type }
+          variables: { fileName, fileType: file.type }
         })
         .then(({ data: { signUpload } }) => {
-          // url
-          // const { signedRequest } = signUpload;
           const options = {
             headers: {
               'Content-Type': file.type,
@@ -293,8 +387,9 @@ const StepTwo = ({ link, client }) => {
           axios
             .put(signUpload.signedRequest, file, options)
             .then(result => {
+              setUploadingThumbnail(false);
+              setThumbnail(file);
               console.log('Response from s3', result);
-              // this.setState({ success: true });
             })
             .catch(error => {
               alert('ERROR ' + JSON.stringify(error));
@@ -310,11 +405,14 @@ const StepTwo = ({ link, client }) => {
 
   return (
     <StyledContainer>
-      {screen === 1 && (
-        <Fragment>
-          <StyledTitle>Tell us more about this post 😃</StyledTitle>
-          <Content>
-            <StyledPanel>
+      {step === 1 && <StyledTitle>Tell us more about this post 😃</StyledTitle>}
+      {step === 2 && (
+        <StyledTitle>✨ Let’s make this product look nice</StyledTitle>
+      )}
+      <Content>
+        <StyledPanel>
+          {step === 1 && (
+            <Fragment>
               <Field>
                 <Label>
                   <LabelName>
@@ -418,45 +516,61 @@ const StepTwo = ({ link, client }) => {
                     <LabelQualifier> - Required</LabelQualifier>
                   </LabelName>
                 </Label>
-
-                <ThumbnailDropTargetContainer>
-                  {!thumbnail && (
-                    <ThumbnailPlaceholder>
-                      <div {...getRootProps({ className: 'dropzone' })}>
-                        <input {...getInputProps()} />
-                        <StyledThumbnailPlaceholderIcon />
-                      </div>
-                    </ThumbnailPlaceholder>
-                  )}
-                  {thumbnail && (
-                    <ThumbnailContainer>
-                      <Thumbnail src={thumbnail.preview} />
-                    </ThumbnailContainer>
-                  )}
-                </ThumbnailDropTargetContainer>
+                <UploadWrapper>
+                  <LoadingOverlay />
+                  <ThumbnailDropTargetContainer>
+                    {!thumbnail && (
+                      <ThumbnailPlaceholder>
+                        <div {...getRootProps({ className: 'dropzone' })}>
+                          <input {...getInputProps()} />
+                          <StyledThumbnailPlaceholderIcon />
+                        </div>
+                      </ThumbnailPlaceholder>
+                    )}
+                    {thumbnail && !uploadingThumbnail && (
+                      <ThumbnailContainer>
+                        <StyledCircleCloseIcon
+                          onClick={() => setThumbnail(null)}
+                        />
+                        <Thumbnail src={thumbnail.preview} />
+                      </ThumbnailContainer>
+                    )}
+                    <UploadDetails>
+                      <UploadActions>
+                        <TextButton
+                          {...getRootProps({ className: 'dropzone' })}
+                        >
+                          Upload Image
+                        </TextButton>
+                        <ActionDivider>or</ActionDivider>
+                        <TextButton>paste URL</TextButton>
+                      </UploadActions>
+                      <UploadCriteria>
+                        Recommended size: 240x240
+                        <br />
+                        JPG, PNG, GIF. Max weight: 2MB
+                      </UploadCriteria>
+                    </UploadDetails>
+                    {uploadingThumbnail && <div>Uploading...</div>}
+                  </ThumbnailDropTargetContainer>
+                </UploadWrapper>
               </Field>
               <Field>
                 <Actions>
-                  <NextButton onClick={() => setScreen(2)}>Next</NextButton>
+                  <NextButton onClick={() => setStep(2)}>Next</NextButton>
                 </Actions>
               </Field>
-            </StyledPanel>
-            <Preview>Cool Bro</Preview>
-          </Content>
-        </Fragment>
-      )}
-      {screen === 2 && (
-        <Fragment>
-          <StyledTitle>✨ Let’s make this product look nice</StyledTitle>
-          <Content>
-            <StyledPanel>
+            </Fragment>
+          )}
+          {step === 2 && (
+            <Fragment>
               <Field>
                 <Label>
                   <LabelName>Gallery</LabelName>
                 </Label>
-                <ThumbnailDropTargetContainer>
+                <ThumbnailDropTargetContainer width="100%">
                   {!thumbnail && (
-                    <ThumbnailPlaceholder>
+                    <ThumbnailPlaceholder width="100%">
                       <div {...getRootProps({ className: 'dropzone' })}>
                         <input {...getInputProps()} />
                         <StyledThumbnailPlaceholderIcon />
@@ -470,11 +584,12 @@ const StepTwo = ({ link, client }) => {
                   )}
                 </ThumbnailDropTargetContainer>
               </Field>
-            </StyledPanel>
-            <Preview>Cool Bro</Preview>
-          </Content>
-        </Fragment>
-      )}
+            </Fragment>
+          )}
+          <StepsContainer>{stepButtons}</StepsContainer>
+        </StyledPanel>
+        <Preview>Cool Bro</Preview>
+      </Content>
     </StyledContainer>
   );
 };
