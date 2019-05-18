@@ -27,6 +27,7 @@ import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
 import StyledButton from '../../shared/library/components/buttons/styled';
+import Spinner from '../../shared/library/components/progress-indicators/spinner';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
@@ -203,14 +204,19 @@ const img = {
   height: '100%'
 };
 
-const ThumbnailDropTargetContainer = styled('div')({
-  display: 'flex',
-  ' > div': {
-    '&:focus': {
-      outline: 'none'
+const ThumbnailDropTargetContainer = styled('div')(
+  {
+    display: 'flex',
+    ' > div': {
+      '&:focus': {
+        outline: 'none'
+      }
     }
-  }
-});
+  },
+  ({ uploading = false }) => ({
+    opacity: uploading ? 0.5 : 1
+  })
+);
 
 const ThumbnailPlaceholder = styled('div')(
   {
@@ -256,6 +262,7 @@ const ThumbnailContainer = styled('div')({
 });
 
 const Thumbnail = styled('img')({
+  borderRadius: 3,
   maxWidth: THUMBNAIL_SIZE,
   maxHeight: THUMBNAIL_SIZE
 });
@@ -273,11 +280,14 @@ const UploadWrapper = styled('div')({
 });
 
 const LoadingOverlay = styled('div')({
-  // position: 'absolute',
-  // top: 0,
-  // right: 0,
-  // bottom: 0,
-  // left: 0
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
 });
 
 const TextButton = styled('button')({
@@ -340,7 +350,7 @@ const StepTwo = ({ link, client }) => {
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [step, setStep] = useState(1);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
-
+  console.log('uploadingThumbnail', uploadingThumbnail);
   const [files, setFiles] = useState([]);
 
   const [thumbnail, setThumbnail] = useState(null);
@@ -517,8 +527,12 @@ const StepTwo = ({ link, client }) => {
                   </LabelName>
                 </Label>
                 <UploadWrapper>
-                  <LoadingOverlay />
-                  <ThumbnailDropTargetContainer>
+                  {uploadingThumbnail && (
+                    <LoadingOverlay>
+                      <Spinner />
+                    </LoadingOverlay>
+                  )}
+                  <ThumbnailDropTargetContainer uploading={uploadingThumbnail}>
                     {!thumbnail && (
                       <ThumbnailPlaceholder>
                         <div {...getRootProps({ className: 'dropzone' })}>
@@ -551,7 +565,6 @@ const StepTwo = ({ link, client }) => {
                         JPG, PNG, GIF. Max weight: 2MB
                       </UploadCriteria>
                     </UploadDetails>
-                    {uploadingThumbnail && <div>Uploading...</div>}
                   </ThumbnailDropTargetContainer>
                 </UploadWrapper>
               </Field>
