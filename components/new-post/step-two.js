@@ -108,7 +108,8 @@ const CharacterCounter = styled('span')({
 
 const Label = styled('div')({
   marginBottom: 10,
-  display: 'flex'
+  display: 'flex',
+  flexDirection: 'column'
 });
 
 const LabelName = styled('span')({
@@ -232,9 +233,14 @@ const ThumbnailPlaceholder = styled('div')(
       }
     }
   },
-  ({ width = THUMBNAIL_SIZE, height = THUMBNAIL_SIZE }) => ({
-    width: width,
-    height: height
+  ({
+    width = THUMBNAIL_SIZE,
+    height = THUMBNAIL_SIZE,
+    maxWidth = THUMBNAIL_SIZE
+  }) => ({
+    width,
+    height,
+    maxWidth
   })
 );
 
@@ -335,6 +341,13 @@ const StyledCircleDot = styled(CircleDot)(
     opacity: disabled ? 0.5 : 1
   })
 );
+
+const LabelDetail = styled('div')({
+  ...BASE_TEXT,
+  color: DETROIT
+});
+
+const GalleryThumbnailPlaceholder = styled('div')({});
 
 const StepsContainer = styled('div')({});
 
@@ -525,6 +538,7 @@ const StepTwo = ({ link, client }) => {
                     Thumbnail
                     <LabelQualifier> - Required</LabelQualifier>
                   </LabelName>
+                  <LabelDetail>Make it look nice and professional.</LabelDetail>
                 </Label>
                 <UploadWrapper>
                   {uploadingThumbnail && (
@@ -580,16 +594,16 @@ const StepTwo = ({ link, client }) => {
               <Field>
                 <Label>
                   <LabelName>Gallery</LabelName>
+                  <LabelDetail>Recommended size: 1270x760px.</LabelDetail>
                 </Label>
                 <ThumbnailDropTargetContainer width="100%">
-                  {!thumbnail && (
-                    <ThumbnailPlaceholder width="100%">
-                      <div {...getRootProps({ className: 'dropzone' })}>
-                        <input {...getInputProps()} />
-                        <StyledThumbnailPlaceholderIcon />
-                      </div>
-                    </ThumbnailPlaceholder>
-                  )}
+                  <ThumbnailPlaceholder maxWidth="100%" width="100%">
+                    <div {...getRootProps({ className: 'dropzone' })}>
+                      <input {...getInputProps()} />
+                      <StyledThumbnailPlaceholderIcon />
+                    </div>
+                  </ThumbnailPlaceholder>
+
                   {thumbnail && (
                     <ThumbnailContainer>
                       <Thumbnail src={thumbnail.preview} />
