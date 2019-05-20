@@ -32,6 +32,8 @@ import Spinner from '../../shared/library/components/progress-indicators/spinner
 import { TOPICS_QUERY } from '../../data/queries';
 
 const THUMBNAIL_SIZE = 80;
+const GALLERY_THUMBNAIL_SIZE = 50;
+const DEFAULT_GALLERY_THUMB_PLACEHOLDERS = 3;
 const STEPS = 3;
 
 const StyledContainer = styled(Container)({
@@ -347,7 +349,14 @@ const LabelDetail = styled('div')({
   color: DETROIT
 });
 
-const GalleryThumbnailPlaceholder = styled('div')({});
+const GalleryThumbnailContainer = styled('div')({
+  display: 'flex',
+  marginTop: 10,
+  ' > div': {
+    marginTop: 10,
+    marginRight: 10
+  }
+});
 
 const StepsContainer = styled('div')({});
 
@@ -364,7 +373,7 @@ const StepTwo = ({ link, client }) => {
   const [step, setStep] = useState(1);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
   console.log('uploadingThumbnail', uploadingThumbnail);
-  const [files, setFiles] = useState([]);
+  const [galleryThumbnails, setGalleryThumbnails] = useState([]);
 
   const [thumbnail, setThumbnail] = useState(null);
 
@@ -379,6 +388,16 @@ const StepTwo = ({ link, client }) => {
           }
         }}
         disabled={isDisabled}
+      />
+    );
+  }
+
+  const galleryThumbPlaceholders = [];
+  for (let j = 0; j < DEFAULT_GALLERY_THUMB_PLACEHOLDERS; j++) {
+    galleryThumbPlaceholders.push(
+      <ThumbnailPlaceholder
+        width={GALLERY_THUMBNAIL_SIZE}
+        height={GALLERY_THUMBNAIL_SIZE}
       />
     );
   }
@@ -610,6 +629,9 @@ const StepTwo = ({ link, client }) => {
                     </ThumbnailContainer>
                   )}
                 </ThumbnailDropTargetContainer>
+                <GalleryThumbnailContainer>
+                  {galleryThumbPlaceholders}
+                </GalleryThumbnailContainer>
               </Field>
             </Fragment>
           )}
