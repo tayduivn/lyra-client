@@ -1,7 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import uuidv4 from 'uuid/v4';
-import axios from 'axios';
 import { withApollo } from 'react-apollo';
 import styled from '@emotion/styled';
 import Select from 'react-select';
@@ -22,12 +20,12 @@ import {
   LAVENDER,
   FOCUS_LAVENDER
 } from '../../shared/style/colors';
-import { SIGN_UPLOAD } from '../../data/mutations';
 import { Container } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import Panel from '../../shared/library/containers/panel';
 import StyledButton from '../../shared/library/components/buttons/styled';
 import Spinner from '../../shared/library/components/progress-indicators/spinner';
+import { uploadImage } from '../../shared/utils';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
@@ -360,8 +358,6 @@ const GalleryThumbnailContainer = styled('div')({
 
 const StepsContainer = styled('div')({});
 
-const uploadImage = (client, file) => {};
-
 const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
   const descriptionMaxCharacters = 60;
@@ -372,8 +368,8 @@ const StepTwo = ({ link, client }) => {
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [step, setStep] = useState(1);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
-  console.log('uploadingThumbnail', uploadingThumbnail);
-  const [galleryThumbnails, setGalleryThumbnails] = useState([]);
+  const [uploadingGalleryThumb, setUploadingGalleryThumb] = useState(false);
+  const [galleryThumbs, setGalleryThumbs] = useState([]);
 
   const [thumbnail, setThumbnail] = useState(null);
 
@@ -402,6 +398,18 @@ const StepTwo = ({ link, client }) => {
     );
   }
 
+  const {
+    getRootProps: getGalleryRootProps,
+    getInputProps: getGalleryInputProps
+  } = useDropzone({
+    accept: 'image/*',
+    onDrop: acceptedFiles => {
+      const file = acceptedFiles[0];
+      console.log('accepted!', acceptedFiles);
+      setUploadingGalleryThumb(true);
+    }
+  });
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: acceptedFiles => {
@@ -409,39 +417,12 @@ const StepTwo = ({ link, client }) => {
       Object.assign(file, {
         preview: URL.createObjectURL(file)
       });
-      // setThumbnail(file);
       setUploadingThumbnail(true);
-      const fileName = uuidv4();
-      client
-        .mutate({
-          mutation: SIGN_UPLOAD,
-          variables: { fileName, fileType: file.type }
-        })
-        .then(({ data: { signUpload } }) => {
-          const options = {
-            headers: {
-              'Content-Type': file.type,
-              'x-amz-acl': 'public-read'
-            }
-          };
-          console.log('cool test test', signUpload);
-          console.log('access url', signUpload.url);
-          axios
-            .put(signUpload.signedRequest, file, options)
-            .then(result => {
-              setUploadingThumbnail(false);
-              setThumbnail(file);
-              console.log('Response from s3', result);
-            })
-            .catch(error => {
-              alert('ERROR ' + JSON.stringify(error));
-            });
-          // console.log('data from signed upload', data);
-        })
-        // eslint-disable-next-line no-unused-vars
-        .catch(err => {
-          console.log('ERR', err);
-        });
+      uploadImage(client, file, result => {
+        setUploadingThumbnail(false);
+        setThumbnail(file);
+        console.log('Response from s3', result);
+      });
     }
   });
 
@@ -615,20 +596,26 @@ const StepTwo = ({ link, client }) => {
                   <LabelName>Gallery</LabelName>
                   <LabelDetail>Recommended size: 1270x760px.</LabelDetail>
                 </Label>
-                <ThumbnailDropTargetContainer width="100%">
-                  <ThumbnailPlaceholder maxWidth="100%" width="100%">
-                    <div {...getRootProps({ className: 'dropzone' })}>
-                      <input {...getInputProps()} />
-                      <StyledThumbnailPlaceholderIcon />
-                    </div>
-                  </ThumbnailPlaceholder>
-
-                  {thumbnail && (
-                    <ThumbnailContainer>
-                      <Thumbnail src={thumbnail.preview} />
-                    </ThumbnailContainer>
+                <UploadWrapper>
+                  {uploadingGalleryThumb && (
+                    <LoadingOverlay>
+                      <Spinner />
+                    </LoadingOverlay>
                   )}
-                </ThumbnailDropTargetContainer>
+
+                  <ThumbnailDropTargetContainer
+                    width="100%"
+                    uploading={uploadingGalleryThumb}
+                  >
+                    <ThumbnailPlaceholder maxWidth="100%" width="100%">
+                      <div {...getGalleryRootProps({ className: 'dropzone' })}>
+                        <input {...getGalleryInputProps()} />
+                        <StyledThumbnailPlaceholderIcon />
+                      </div>
+                    </ThumbnailPlaceholder>
+                  </ThumbnailDropTargetContainer>
+                </UploadWrapper>
+
                 <GalleryThumbnailContainer>
                   {galleryThumbPlaceholders}
                 </GalleryThumbnailContainer>
