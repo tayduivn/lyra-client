@@ -38,7 +38,7 @@ export const uploadImage = (client, file, cb) => {
       axios
         .put(signUpload.signedRequest, file, options)
         .then(result => {
-          cb(result);
+          cb(result, fileName);
         })
         .catch(error => {
           alert('ERROR ' + JSON.stringify(error));

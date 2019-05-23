@@ -358,6 +358,12 @@ const GalleryThumbnailContainer = styled('div')({
 
 const StepsContainer = styled('div')({});
 
+const addGalleryThumb = url => {
+  let thumbs = galleryThumbs;
+  thumbs.push(url);
+  setGalleryThumbs(thumbs);
+};
+
 const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
   const descriptionMaxCharacters = 60;
@@ -389,7 +395,14 @@ const StepTwo = ({ link, client }) => {
   }
 
   const galleryThumbPlaceholders = [];
-  for (let j = 0; j < DEFAULT_GALLERY_THUMB_PLACEHOLDERS; j++) {
+  for (
+    let j = 0;
+    j <
+    (galleryThumbs.length > DEFAULT_GALLERY_THUMB_PLACEHOLDERS
+      ? 0
+      : DEFAULT_GALLERY_THUMB_PLACEHOLDERS - galleryThumbs.length);
+    j++
+  ) {
     galleryThumbPlaceholders.push(
       <ThumbnailPlaceholder
         width={GALLERY_THUMBNAIL_SIZE}
@@ -405,8 +418,14 @@ const StepTwo = ({ link, client }) => {
     accept: 'image/*',
     onDrop: acceptedFiles => {
       const file = acceptedFiles[0];
-      console.log('accepted!', acceptedFiles);
       setUploadingGalleryThumb(true);
+      uploadImage(client, file, (result, filename) => {
+        // const url = `https://s3.amazonaws.com/lyra-labs-development/${filename}`;
+        let thumbs = galleryThumbs;
+        thumbs.push(URL.createObjectURL(file));
+        setGalleryThumbs(thumbs);
+        setUploadingGalleryThumb(false);
+      });
     }
   });
 
@@ -617,6 +636,9 @@ const StepTwo = ({ link, client }) => {
                 </UploadWrapper>
 
                 <GalleryThumbnailContainer>
+                  {galleryThumbs.map((thumb, index) => (
+                    <Thumbnail src={thumb} />
+                  ))}
                   {galleryThumbPlaceholders}
                 </GalleryThumbnailContainer>
               </Field>
