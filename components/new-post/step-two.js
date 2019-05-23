@@ -263,14 +263,42 @@ const StyledCircleCloseIcon = styled(CircleCloseIcon)({
 
 const ThumbnailContainer = styled('div')({
   position: 'relative',
-  maxHeight: THUMBNAIL_SIZE,
-  maxWidth: THUMBNAIL_SIZE
+  height: THUMBNAIL_SIZE,
+  width: THUMBNAIL_SIZE,
+  [StyledCircleCloseIcon]: {
+    display: 'none'
+  },
+  '&:hover': {
+    [StyledCircleCloseIcon]: {
+      display: 'block'
+    }
+  }
 });
 
 const Thumbnail = styled('img')({
   borderRadius: 3,
-  maxWidth: THUMBNAIL_SIZE,
-  maxHeight: THUMBNAIL_SIZE
+  width: THUMBNAIL_SIZE,
+  height: THUMBNAIL_SIZE
+});
+
+const GalleryThumbnailWrapper = styled('div')({
+  position: 'relative',
+  marginTop: 10,
+  marginRight: 10,
+  [StyledCircleCloseIcon]: {
+    display: 'none'
+  },
+  '&:hover': {
+    [StyledCircleCloseIcon]: {
+      display: 'block'
+    }
+  }
+});
+
+const GalleryThumbnail = styled('img')({
+  width: GALLERY_THUMBNAIL_SIZE,
+  height: GALLERY_THUMBNAIL_SIZE,
+  borderRadius: 3
 });
 
 const Actions = styled('div')({
@@ -637,7 +665,20 @@ const StepTwo = ({ link, client }) => {
 
                 <GalleryThumbnailContainer>
                   {galleryThumbs.map((thumb, index) => (
-                    <Thumbnail src={thumb} />
+                    <GalleryThumbnailWrapper key={index}>
+                      <StyledCircleCloseIcon
+                        onClick={() => {
+                          setGalleryThumbs([
+                            ...galleryThumbs.slice(0, index),
+                            ...galleryThumbs.slice(
+                              index + 1,
+                              galleryThumbs.length
+                            )
+                          ]);
+                        }}
+                      />
+                      <GalleryThumbnail src={thumb} />
+                    </GalleryThumbnailWrapper>
                   ))}
                   {galleryThumbPlaceholders}
                 </GalleryThumbnailContainer>
