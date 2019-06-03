@@ -26,6 +26,9 @@ import Panel from '../../shared/library/containers/panel';
 import StyledButton from '../../shared/library/components/buttons/styled';
 import Spinner from '../../shared/library/components/progress-indicators/spinner';
 import { uploadImage } from '../../shared/utils';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
+import GalleryThumbComponent from './gallery-thumbnail';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
@@ -254,7 +257,7 @@ const StyledThumbnailPlaceholderIcon = styled(ThumbnailPlaceholderIcon)({
   }
 });
 
-const StyledCircleCloseIcon = styled(CircleCloseIcon)({
+export const StyledCircleCloseIcon = styled(CircleCloseIcon)({
   cursor: 'pointer',
   position: 'absolute',
   top: -7,
@@ -281,7 +284,7 @@ const Thumbnail = styled('img')({
   height: THUMBNAIL_SIZE
 });
 
-const GalleryThumbnailWrapper = styled('div')({
+export const GalleryThumbnailWrapper = styled('div')({
   position: 'relative',
   marginTop: 10,
   marginRight: 10,
@@ -295,7 +298,7 @@ const GalleryThumbnailWrapper = styled('div')({
   }
 });
 
-const GalleryThumbnail = styled('img')({
+export const GalleryThumbnail = styled('img')({
   width: GALLERY_THUMBNAIL_SIZE,
   height: GALLERY_THUMBNAIL_SIZE,
   borderRadius: 3
@@ -378,6 +381,12 @@ const LabelDetail = styled('div')({
 const GalleryThumbnailContainer = styled('div')({
   display: 'flex',
   marginTop: 10,
+  ' > ul': {
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
   ' > div': {
     marginTop: 10,
     marginRight: 10
@@ -391,6 +400,25 @@ const addGalleryThumb = url => {
   thumbs.push(url);
   setGalleryThumbs(thumbs);
 };
+
+const SortableItem = SortableElement(({ value, onRemove, index }) => (
+  <GalleryThumbComponent url={value} index={index} onRemove={onRemove} />
+));
+
+const SortableList = SortableContainer(({ items, onRemove }) => {
+  return (
+    <ul>
+      {items.map((value, index) => (
+        <SortableItem
+          key={`item-${index}`}
+          onRemove={onRemove}
+          index={index}
+          value={value}
+        />
+      ))}
+    </ul>
+  );
+});
 
 const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
@@ -472,6 +500,10 @@ const StepTwo = ({ link, client }) => {
       });
     }
   });
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    setGalleryThumbs(arrayMove(galleryThumbs, oldIndex, newIndex));
+  };
 
   return (
     <StyledContainer>
@@ -662,24 +694,19 @@ const StepTwo = ({ link, client }) => {
                     </ThumbnailPlaceholder>
                   </ThumbnailDropTargetContainer>
                 </UploadWrapper>
-
                 <GalleryThumbnailContainer>
-                  {galleryThumbs.map((thumb, index) => (
-                    <GalleryThumbnailWrapper key={index}>
-                      <StyledCircleCloseIcon
-                        onClick={() => {
-                          setGalleryThumbs([
-                            ...galleryThumbs.slice(0, index),
-                            ...galleryThumbs.slice(
-                              index + 1,
-                              galleryThumbs.length
-                            )
-                          ]);
-                        }}
-                      />
-                      <GalleryThumbnail src={thumb} />
-                    </GalleryThumbnailWrapper>
-                  ))}
+                  <SortableList
+                    axis={'xy'}
+                    items={galleryThumbs}
+                    onSortEnd={onSortEnd}
+                    onRemove={index => {
+                      setGalleryThumbs([
+                        ...galleryThumbs.slice(0, index),
+                        ...galleryThumbs.slice(index + 1, galleryThumbs.length)
+                      ]);
+                    }}
+                    distance={1}
+                  />
                   {galleryThumbPlaceholders}
                 </GalleryThumbnailContainer>
               </Field>
