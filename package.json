@@ -49,6 +49,9 @@
     "react-popper": "^1.3.3",
     "react-select": "^2.4.3",
     "react-sortable-hoc": "^1.9.1",
+    "slate": "^0.47.3",
+    "slate-plain-serializer": "^0.7.5",
+    "slate-react": "^0.22.3",
     "uuid": "^3.3.2"
   },
   "author": "",

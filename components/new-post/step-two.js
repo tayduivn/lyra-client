@@ -29,6 +29,7 @@ import { uploadImage } from '../../shared/utils';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import GalleryThumbComponent from './gallery-thumbnail';
+import RichEditor from '../rich-editor';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
@@ -93,6 +94,24 @@ const Input = styled('input')(
     borderColor: valid ? LILAC : BLUSH,
     '&:hover': {
       borderColor: valid ? POWDER_BLUE : BLUSH
+    }
+  })
+);
+
+const RichEditorWrapper = styled('div')(
+  {
+    ' > div': {
+      border: '1px solid',
+      padding: 10,
+      minHeight: 93
+    }
+  },
+  ({ valid }) => ({
+    ' > div': {
+      borderColor: valid ? LILAC : BLUSH,
+      '&:hover': {
+        borderColor: valid ? POWDER_BLUE : BLUSH
+      }
     }
   })
 );
@@ -422,15 +441,25 @@ const SortableList = SortableContainer(({ items, onRemove }) => {
 
 const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
-  const descriptionMaxCharacters = 60;
   const [name, setName] = useState('');
   const [nameIsValid, setNameIsValid] = useState(true);
+
+  const taglineMaxCharacters = 60;
+  const [tagline, setTagline] = useState('');
+  const [taglineIsValid, setTaglineIsValid] = useState(true);
+
+  const descriptionMaxCharacters = 260;
   const [description, setDescription] = useState('');
   const [descriptionIsValid, setDescriptionIsValid] = useState(true);
+
   const [selectedTopics, setSelectedTopics] = useState([]);
+
   const [step, setStep] = useState(1);
+
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+
   const [uploadingGalleryThumb, setUploadingGalleryThumb] = useState(false);
+
   const [galleryThumbs, setGalleryThumbs] = useState([]);
 
   const [thumbnail, setThumbnail] = useState(null);
@@ -552,20 +581,20 @@ const StepTwo = ({ link, client }) => {
                   <Input
                     onChange={e => {
                       const { value } = e.target;
-                      setDescription(value);
-                      if (value.length > descriptionMaxCharacters) {
-                        setDescriptionIsValid(false);
+                      setTagline(value);
+                      if (value.length > taglineMaxCharacters) {
+                        setTaglineIsValid(false);
                       } else {
-                        setDescriptionIsValid(true);
+                        setTaglineIsValid(true);
                       }
                     }}
                     type="text"
-                    valid={descriptionIsValid}
+                    valid={taglineIsValid}
                     placeholder="Concise and descriptive tagline for the product"
                   />
                   <CharacterCounter>{`${
-                    description.length
-                  }/${descriptionMaxCharacters}`}</CharacterCounter>
+                    tagline.length
+                  }/${taglineMaxCharacters}`}</CharacterCounter>
                 </InputWrapper>
               </Field>
               <Field>
@@ -709,6 +738,22 @@ const StepTwo = ({ link, client }) => {
                   />
                   {galleryThumbPlaceholders}
                 </GalleryThumbnailContainer>
+              </Field>
+              <Field>
+                <Label>
+                  <LabelName>
+                    Description
+                    <LabelQualifier> - Required</LabelQualifier>
+                  </LabelName>
+                </Label>
+                <InputWrapper>
+                  <RichEditorWrapper valid={true}>
+                    <RichEditor placeholder={'COOL BRO PLACEHOLDA!!!'} />
+                  </RichEditorWrapper>
+                  <CharacterCounter>{`${
+                    description.length
+                  }/${descriptionMaxCharacters}`}</CharacterCounter>
+                </InputWrapper>
               </Field>
             </Fragment>
           )}
