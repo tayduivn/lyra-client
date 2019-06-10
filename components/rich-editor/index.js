@@ -1,13 +1,32 @@
+/** @jsx jsx */ import { css, jsx } from '@emotion/core';
 import { Editor } from 'slate-react';
 import { Value } from 'slate';
-import Plain from 'slate-plain-serializer';
-
 import React from 'react';
+import ReactDOM from 'react-dom';
+import Plain from 'slate-plain-serializer';
 import initialValue from './value.json';
-import { css } from 'emotion';
-import { Button, Icon, Menu } from './components';
+import styled from '@emotion/styled';
+import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 
-const MarkButton = ({ editor, type, icon }) => {
+import { Button, Menu } from './components';
+
+const emptyState =
+  '{"object":"value","document":{"object":"document","data":{},"nodes":[{"object":"block","type":"line","data":{},"nodes":[{"object":"text","text":"","marks":[]}]}]}}';
+
+const StyledButton = styled('span')({
+  ...BASE_TEXT,
+  cursor: 'pointer'
+});
+
+const EditorWrapper = styled('div')({
+  position: 'relative'
+});
+
+const Placeholder = styled('span')({
+  ...BASE_TEXT
+});
+
+const MarkButton = ({ editor, type, children }) => {
   const { value } = editor;
   const isActive = value.activeMarks.some(mark => mark.type === type);
   return (
@@ -19,60 +38,34 @@ const MarkButton = ({ editor, type, icon }) => {
         editor.toggleMark(type);
       }}
     >
-      <Icon>{icon}</Icon>
+      {children}
     </Button>
   );
 };
 
 const HoverMenu = React.forwardRef(({ editor }, ref) => {
-  console.log('Plain', Plain);
   return (
-    <Menu
-      ref={ref}
-      className={css`
-        padding: 8px 7px 6px;
-        position: absolute;
-        z-index: 1;
-        top: -10000px;
-        left: -10000px;
-        margin-top: -6px;
-        opacity: 0;
-        background-color: #222;
-        border-radius: 4px;
-        transition: opacity 0.75s;
-      `}
-    >
-      <MarkButton editor={editor} type="bold" icon="format_bold" />
-      <MarkButton editor={editor} type="italic" icon="format_italic" />
-      <MarkButton editor={editor} type="underlined" icon="format_underlined" />
-      <MarkButton editor={editor} type="code" icon="code" />
+    <Menu ref={ref}>
+      <MarkButton editor={editor} type="bold">
+        <StyledButton css={{ fontWeight: WEIGHT.BOLD }}>B</StyledButton>
+      </MarkButton>
+      <MarkButton editor={editor} type="italic">
+        <StyledButton css={{ fontStyle: 'italic' }}>I</StyledButton>
+      </MarkButton>
+      <MarkButton editor={editor} type="underlined">
+        <StyledButton css={{ textDecoration: 'underline' }}>U</StyledButton>
+      </MarkButton>
     </Menu>
   );
 });
 
-/**
- * The hovering menu example.
- *
- * @type {Component}
- */
-
 class HoveringMenu extends React.Component {
-  /**
-   * Deserialize the raw initial value.
-   *
-   * @type {Object}
-   */
-
   state = {
     value: Value.fromJSON(initialValue)
-    // value: Plain.deserialize('')
+    // showPlaceholder: JSON.stringify(Value.fromJSON(initialValue)) === emptyState
   };
 
   menuRef = React.createRef();
-
-  /**
-   * On update, update the menu.
-   */
 
   componentDidMount = () => {
     this.updateMenu();
@@ -81,10 +74,6 @@ class HoveringMenu extends React.Component {
   componentDidUpdate = () => {
     this.updateMenu();
   };
-
-  /**
-   * Update the menu's absolute position.
-   */
 
   updateMenu = () => {
     const menu = this.menuRef.current;
@@ -97,11 +86,13 @@ class HoveringMenu extends React.Component {
       menu.removeAttribute('style');
       return;
     }
-
     const native = window.getSelection();
     const range = native.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     menu.style.opacity = 1;
+    // menu.style.top = `0px`;
+
+    // menu.style.left = `0px`;
     menu.style.top = `${rect.top + window.pageYOffset - menu.offsetHeight}px`;
 
     menu.style.left = `${rect.left +
@@ -110,16 +101,9 @@ class HoveringMenu extends React.Component {
       rect.width / 2}px`;
   };
 
-  /**
-   * Render.
-   *
-   * @return {Element}
-   */
-
   render() {
     return (
       <Editor
-        placeholder={'COOOOOOOLO'}
         value={this.state.value}
         onChange={this.onChange}
         renderEditor={this.renderEditor}
@@ -128,32 +112,20 @@ class HoveringMenu extends React.Component {
     );
   }
 
-  /**
-   * Render the editor.
-   *
-   * @param {Object} props
-   * @param {Function} next
-   * @return {Element}
-   */
-
   renderEditor = (props, editor, next) => {
     const children = next();
     return (
       <React.Fragment>
         {children}
+        {/* {this.state.showPlaceholder ? (
+          <Placeholder>Enter a description here...</Placeholder>
+        ) : (
+          ''
+        )} */}
         <HoverMenu ref={this.menuRef} editor={editor} />
       </React.Fragment>
     );
   };
-
-  /**
-   * Render a Slate mark.
-   *
-   * @param {Object} props
-   * @param {Editor} editor
-   * @param {Function} next
-   * @return {Element}
-   */
 
   renderMark = (props, editor, next) => {
     const { children, mark, attributes } = props;
@@ -172,19 +144,19 @@ class HoveringMenu extends React.Component {
     }
   };
 
-  /**
-   * On change.
-   *
-   * @param {Editor} editor
-   */
-
   onChange = ({ value }) => {
+    const { setDescription } = this.props;
+    setDescription(JSON.stringify(value));
+    // let showPlaceholder = this.state.showPlaceholder;
+    // if (JSON.stringify(value) === emptyState) {
+    //   showPlaceholder = true;
+    //   console.log('empty editor');
+    // } else {
+    //   showPlaceholder = false;
+    //   console.log('There is content NOT EMPTY');
+    // }
     this.setState({ value });
   };
 }
-
-/**
- * Export.
- */
 
 export default HoveringMenu;

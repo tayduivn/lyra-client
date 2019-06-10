@@ -1,15 +1,17 @@
 {
-  "object": "value",
   "document": {
-    "object": "document",
     "nodes": [
       {
         "object": "block",
-        "type": "paragraph",
+        "type": "line",
         "nodes": [
           {
             "object": "text",
-            "text": ""
+            "leaves": [
+              {
+                "text": ""
+              }
+            ]
           }
         ]
       }

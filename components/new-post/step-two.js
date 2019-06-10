@@ -29,7 +29,7 @@ import { uploadImage } from '../../shared/utils';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import GalleryThumbComponent from './gallery-thumbnail';
-import RichEditor from '../rich-editor';
+// import RichEditor from '../rich-editor';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
@@ -98,16 +98,41 @@ const Input = styled('input')(
   })
 );
 
+const Textarea = styled('textarea')(
+  {
+    ...BASE_TEXT,
+    outline: 'none',
+    padding: 10,
+    paddingRight: 50,
+    borderRadius: 3,
+    boxSizing: 'border-box',
+    border: '1px solid',
+    minHeight: 93,
+    resize: 'none',
+    width: '100%',
+    '&:disabled': {
+      cursor: 'not-allowed',
+      backgroundColor: ALABASTER
+    }
+  },
+  ({ valid }) => ({
+    borderColor: valid ? LILAC : BLUSH,
+    '&:hover': {
+      borderColor: valid ? POWDER_BLUE : BLUSH
+    }
+  })
+);
+
 const RichEditorWrapper = styled('div')(
   {
-    ' > div': {
+    ' > div:first-of-type': {
       border: '1px solid',
       padding: 10,
       minHeight: 93
     }
   },
   ({ valid }) => ({
-    ' > div': {
+    ' > div:first-of-type': {
       borderColor: valid ? LILAC : BLUSH,
       '&:hover': {
         borderColor: valid ? POWDER_BLUE : BLUSH
@@ -116,17 +141,21 @@ const RichEditorWrapper = styled('div')(
   })
 );
 
-const CharacterCounter = styled('span')({
-  ...BASE_TEXT,
-  fontSize: 11,
-  color: DETROIT,
-  position: 'absolute',
-  bottom: 1,
-  right: 2,
-  padding: '0 2px',
-  borderRadius: '3px 0 0 0',
-  lineHeight: '16px'
-});
+const CharacterCounter = styled('span')(
+  {
+    ...BASE_TEXT,
+    fontSize: 11,
+    color: DETROIT,
+    position: 'absolute',
+    padding: '0 2px',
+    borderRadius: '3px 0 0 0',
+    lineHeight: '16px'
+  },
+  ({ bottom = 1, right = 2 }) => ({
+    bottom,
+    right
+  })
+);
 
 const Label = styled('div')({
   marginBottom: 10,
@@ -747,13 +776,38 @@ const StepTwo = ({ link, client }) => {
                   </LabelName>
                 </Label>
                 <InputWrapper>
+                  <Textarea
+                    onChange={e => {
+                      const { value } = e.target;
+                      setDescription(value);
+                      if (value.length > descriptionMaxCharacters) {
+                        setDescriptionIsValid(false);
+                      } else {
+                        setDescriptionIsValid(true);
+                      }
+                    }}
+                    valid={descriptionIsValid}
+                    placeholder="Enter a brief description here..."
+                  />
+                  <CharacterCounter bottom={4} right={2}>{`${
+                    description.length
+                  }/${descriptionMaxCharacters}`}</CharacterCounter>
+                </InputWrapper>
+
+                {/* <InputWrapper>
+                  <Textarea /> */}
+                {/* <RichEditorWrapper valid={true}>
+                    <RichEditor setDescription={setDescription} />
+                  </RichEditorWrapper> */}
+                {/* </InputWrapper> */}
+                {/* <InputWrapper>
                   <RichEditorWrapper valid={true}>
-                    <RichEditor placeholder={'COOL BRO PLACEHOLDA!!!'} />
+                    <RichEditor />
                   </RichEditorWrapper>
                   <CharacterCounter>{`${
                     description.length
                   }/${descriptionMaxCharacters}`}</CharacterCounter>
-                </InputWrapper>
+                </InputWrapper> */}
               </Field>
             </Fragment>
           )}
