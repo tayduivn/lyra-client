@@ -49,3 +49,10 @@ export const uploadImage = (client, file, cb) => {
       console.log('ERR', err);
     });
 };
+
+export const normalizeTopics = topics => {
+  return topics.map(({ name, slug }) => ({
+    value: slug,
+    label: name
+  }));
+};

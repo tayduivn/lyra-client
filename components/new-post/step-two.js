@@ -1,472 +1,60 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
-import styled from '@emotion/styled';
 import Select from 'react-select';
 import { useDropzone } from 'react-dropzone';
 import { Query } from 'react-apollo';
-import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
-import { TABLET } from '../../shared/style/breakpoints';
-import ThumbnailPlaceholderIcon from '../../shared/style/icons/thumbnail-placeholder.svg';
-import CircleCloseIcon from '../../shared/style/icons/circle-close.svg';
-import CircleDot from '../../shared/style/icons/circle-dot.svg';
-import {
-  DETROIT,
-  WHITE,
-  ALABASTER,
-  LILAC,
-  POWDER_BLUE,
-  BLUSH,
-  LAVENDER,
-  FOCUS_LAVENDER
-} from '../../shared/style/colors';
-import { Container } from '../../shared/library/components/layout';
-import { Title } from '../../shared/library/components/typography';
-import Panel from '../../shared/library/containers/panel';
-import StyledButton from '../../shared/library/components/buttons/styled';
 import Spinner from '../../shared/library/components/progress-indicators/spinner';
-import { uploadImage } from '../../shared/utils';
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { uploadImage, normalizeTopics } from '../../shared/utils';
+
 import arrayMove from 'array-move';
 import GalleryThumbComponent from './gallery-thumbnail';
-// import RichEditor from '../rich-editor';
 
 import { TOPICS_QUERY } from '../../data/queries';
 
-const THUMBNAIL_SIZE = 80;
-const GALLERY_THUMBNAIL_SIZE = 50;
+import {
+  StyledContainer,
+  StyledTitle,
+  StyledPanel,
+  Content,
+  Preview,
+  selectStyles,
+  ThumbnailDropTargetContainer,
+  ThumbnailPlaceholder,
+  StyledThumbnailPlaceholderIcon,
+  StyledCircleCloseIcon,
+  ThumbnailContainer,
+  Thumbnail,
+  NextButton,
+  Actions,
+  UploadWrapper,
+  LoadingOverlay,
+  TextButton,
+  UploadDetails,
+  StyledCircleDot,
+  UploadActions,
+  ActionDivider,
+  UploadCriteria,
+  GalleryThumbnailContainer,
+  StepsContainer,
+  SortableList
+} from './components';
+
+import {
+  Input,
+  Textarea,
+  InputWrapper,
+  CharacterCounter,
+  Label,
+  LabelName,
+  LabelQualifier,
+  LabelDetail,
+  Field
+} from '../../shared/library/components/inputs';
+
+export const GALLERY_THUMBNAIL_SIZE = 50;
 const DEFAULT_GALLERY_THUMB_PLACEHOLDERS = 3;
 const STEPS = 3;
-
-const StyledContainer = styled(Container)({
-  flexDirection: 'column',
-  [TABLET]: {
-    padding: '0 10px 0 10px'
-  }
-});
-
-const StyledTitle = styled(Title)({
-  [TABLET]: {
-    justifyContent: 'center'
-  }
-});
-
-const StyledPanel = styled(Panel)({
-  flex: 1
-});
-
-const Content = styled('div')({
-  display: 'flex'
-});
-
-const Preview = styled('div')({
-  flex: 1,
-  [TABLET]: {
-    display: 'none'
-  }
-});
-
-const Field = styled('div')({
-  marginBottom: 20
-});
-
-const InputWrapper = styled('div')({
-  position: 'relative'
-});
-
-const Input = styled('input')(
-  {
-    ...BASE_TEXT,
-    outline: 'none',
-    padding: 10,
-    paddingRight: 50,
-    borderRadius: 3,
-    boxSizing: 'border-box',
-    border: '1px solid',
-    height: 35,
-    width: '100%',
-    '&:disabled': {
-      cursor: 'not-allowed',
-      backgroundColor: ALABASTER
-    }
-  },
-  ({ valid }) => ({
-    borderColor: valid ? LILAC : BLUSH,
-    '&:hover': {
-      borderColor: valid ? POWDER_BLUE : BLUSH
-    }
-  })
-);
-
-const Textarea = styled('textarea')(
-  {
-    ...BASE_TEXT,
-    outline: 'none',
-    padding: 10,
-    paddingRight: 50,
-    borderRadius: 3,
-    boxSizing: 'border-box',
-    border: '1px solid',
-    minHeight: 93,
-    resize: 'none',
-    width: '100%',
-    '&:disabled': {
-      cursor: 'not-allowed',
-      backgroundColor: ALABASTER
-    }
-  },
-  ({ valid }) => ({
-    borderColor: valid ? LILAC : BLUSH,
-    '&:hover': {
-      borderColor: valid ? POWDER_BLUE : BLUSH
-    }
-  })
-);
-
-const RichEditorWrapper = styled('div')(
-  {
-    ' > div:first-of-type': {
-      border: '1px solid',
-      padding: 10,
-      minHeight: 93
-    }
-  },
-  ({ valid }) => ({
-    ' > div:first-of-type': {
-      borderColor: valid ? LILAC : BLUSH,
-      '&:hover': {
-        borderColor: valid ? POWDER_BLUE : BLUSH
-      }
-    }
-  })
-);
-
-const CharacterCounter = styled('span')(
-  {
-    ...BASE_TEXT,
-    fontSize: 11,
-    color: DETROIT,
-    position: 'absolute',
-    padding: '0 2px',
-    borderRadius: '3px 0 0 0',
-    lineHeight: '16px'
-  },
-  ({ bottom = 1, right = 2 }) => ({
-    bottom,
-    right
-  })
-);
-
-const Label = styled('div')({
-  marginBottom: 10,
-  display: 'flex',
-  flexDirection: 'column'
-});
-
-const LabelName = styled('span')({
-  ...BASE_TEXT,
-  fontWeight: WEIGHT.ULTRA_BOLD,
-  lineHeight: '20px'
-});
-
-const LabelQualifier = styled('span')({
-  fontWeight: WEIGHT.NORMAL,
-  color: DETROIT
-});
-
-const INPUT_CHANGE = 'input-change';
-
-const normalizeTopics = topics => {
-  return topics.map(({ name, slug }) => ({
-    value: slug,
-    label: name
-  }));
-};
-
-const selectStyles = {
-  indicatorsContainer: provided => {
-    return { display: 'none' };
-  },
-  placeholder: provided => ({
-    ...provided,
-    ...BASE_TEXT
-  }),
-  multiValue: provided => ({
-    ...provided,
-    ...BASE_TEXT
-  }),
-  option: provided => ({
-    ...provided,
-    ...BASE_TEXT,
-    cursor: 'pointer',
-    backgroundColor: WHITE,
-    '&:hover': {
-      backgroundColor: LILAC
-    }
-  }),
-  menu: provided => ({
-    ...provided,
-    width: 'auto',
-    ' > div': {
-      padding: 0
-    }
-  }),
-  control: provided => {
-    return {
-      ...provided,
-      borderRadius: 3,
-      borderColor: LILAC,
-      boxShadow: 'none',
-      '&:hover': {
-        borderColor: POWDER_BLUE
-      },
-      ' > div:first-of-type': {}
-    };
-  }
-};
-
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box'
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden'
-};
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
-};
-
-const ThumbnailDropTargetContainer = styled('div')(
-  {
-    display: 'flex',
-    ' > div': {
-      '&:focus': {
-        outline: 'none'
-      }
-    }
-  },
-  ({ uploading = false }) => ({
-    opacity: uploading ? 0.5 : 1
-  })
-);
-
-const ThumbnailPlaceholder = styled('div')(
-  {
-    maxHeight: THUMBNAIL_SIZE,
-    maxWidth: THUMBNAIL_SIZE,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: `1px dashed ${LILAC}`,
-    ' > div': {
-      '&:focus': {
-        outline: 'none'
-      }
-    }
-  },
-  ({
-    width = THUMBNAIL_SIZE,
-    height = THUMBNAIL_SIZE,
-    maxWidth = THUMBNAIL_SIZE
-  }) => ({
-    width,
-    height,
-    maxWidth
-  })
-);
-
-const StyledThumbnailPlaceholderIcon = styled(ThumbnailPlaceholderIcon)({
-  cursor: 'pointer',
-  '&:focus': {
-    outline: 'none'
-  },
-  '&:hover': {
-    opacity: 0.5
-  }
-});
-
-export const StyledCircleCloseIcon = styled(CircleCloseIcon)({
-  cursor: 'pointer',
-  position: 'absolute',
-  top: -7,
-  right: -7
-});
-
-const ThumbnailContainer = styled('div')({
-  position: 'relative',
-  height: THUMBNAIL_SIZE,
-  width: THUMBNAIL_SIZE,
-  [StyledCircleCloseIcon]: {
-    display: 'none'
-  },
-  '&:hover': {
-    [StyledCircleCloseIcon]: {
-      display: 'block'
-    }
-  }
-});
-
-const Thumbnail = styled('img')({
-  borderRadius: 3,
-  width: THUMBNAIL_SIZE,
-  height: THUMBNAIL_SIZE
-});
-
-export const GalleryThumbnailWrapper = styled('div')({
-  position: 'relative',
-  marginTop: 10,
-  marginRight: 10,
-  [StyledCircleCloseIcon]: {
-    display: 'none'
-  },
-  '&:hover': {
-    [StyledCircleCloseIcon]: {
-      display: 'block'
-    }
-  }
-});
-
-export const GalleryThumbnail = styled('img')({
-  width: GALLERY_THUMBNAIL_SIZE,
-  height: GALLERY_THUMBNAIL_SIZE,
-  borderRadius: 3
-});
-
-const Actions = styled('div')({
-  display: 'flex'
-});
-
-const NextButton = styled(StyledButton)({
-  marginLeft: 'auto'
-});
-
-const UploadWrapper = styled('div')({
-  position: 'relative'
-});
-
-const LoadingOverlay = styled('div')({
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-});
-
-const TextButton = styled('button')({
-  ...BASE_TEXT,
-  fontWeight: WEIGHT.BOLD,
-  color: FOCUS_LAVENDER,
-  cursor: 'pointer',
-  border: 'none',
-  background: '0 0',
-  padding: 0,
-  '&:hover': {
-    textDecoration: 'underline'
-  }
-});
-
-const UploadDetails = styled('div')({
-  marginLeft: 10,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between'
-});
-
-const UploadActions = styled('div')({
-  display: 'flex'
-});
-
-const ActionDivider = styled('div')({
-  ...BASE_TEXT,
-  color: DETROIT,
-  marginLeft: 5,
-  marginRight: 5
-});
-
-const UploadCriteria = styled('div')({
-  ...BASE_TEXT,
-  color: DETROIT
-});
-
-const StyledCircleDot = styled(CircleDot)(
-  {
-    marginRight: 10
-  },
-  ({ disabled = true }) => ({
-    cursor: disabled ? 'default' : 'pointer',
-    opacity: disabled ? 0.5 : 1
-  })
-);
-
-const LabelDetail = styled('div')({
-  ...BASE_TEXT,
-  color: DETROIT
-});
-
-const GalleryThumbnailContainer = styled('div')({
-  display: 'flex',
-  marginTop: 10,
-  ' > ul': {
-    margin: 0,
-    padding: 0,
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  ' > div': {
-    marginTop: 10,
-    marginRight: 10
-  }
-});
-
-const StepsContainer = styled('div')({});
-
-const addGalleryThumb = url => {
-  let thumbs = galleryThumbs;
-  thumbs.push(url);
-  setGalleryThumbs(thumbs);
-};
-
-const SortableItem = SortableElement(({ value, onRemove, index }) => (
-  <GalleryThumbComponent url={value} index={index} onRemove={onRemove} />
-));
-
-const SortableList = SortableContainer(({ items, onRemove }) => {
-  return (
-    <ul>
-      {items.map((value, index) => (
-        <SortableItem
-          key={`item-${index}`}
-          onRemove={onRemove}
-          index={index}
-          value={value}
-        />
-      ))}
-    </ul>
-  );
-});
 
 const StepTwo = ({ link, client }) => {
   const nameMaxCharacters = 40;
@@ -793,21 +381,6 @@ const StepTwo = ({ link, client }) => {
                     description.length
                   }/${descriptionMaxCharacters}`}</CharacterCounter>
                 </InputWrapper>
-
-                {/* <InputWrapper>
-                  <Textarea /> */}
-                {/* <RichEditorWrapper valid={true}>
-                    <RichEditor setDescription={setDescription} />
-                  </RichEditorWrapper> */}
-                {/* </InputWrapper> */}
-                {/* <InputWrapper>
-                  <RichEditorWrapper valid={true}>
-                    <RichEditor />
-                  </RichEditorWrapper>
-                  <CharacterCounter>{`${
-                    description.length
-                  }/${descriptionMaxCharacters}`}</CharacterCounter>
-                </InputWrapper> */}
               </Field>
             </Fragment>
           )}
