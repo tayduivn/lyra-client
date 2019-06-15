@@ -99,6 +99,11 @@ export const LabelDetail = styled('div')({
   color: DETROIT
 });
 
-export const Field = styled('div')({
-  marginBottom: 20
-});
+export const Field = styled('div')(
+  {
+    marginBottom: 20
+  },
+  ({ styles = {} }) => ({
+    ...styles
+  })
+);

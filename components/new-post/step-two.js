@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import Select from 'react-select';
@@ -6,10 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import { Query } from 'react-apollo';
 import Spinner from '../../shared/library/components/progress-indicators/spinner';
 import { uploadImage, normalizeTopics } from '../../shared/utils';
-
 import arrayMove from 'array-move';
-import GalleryThumbComponent from './gallery-thumbnail';
-
 import { TOPICS_QUERY } from '../../data/queries';
 
 import {
@@ -42,7 +39,6 @@ import {
 
 import {
   Input,
-  Textarea,
   InputWrapper,
   CharacterCounter,
   Label,
@@ -52,26 +48,57 @@ import {
   Field
 } from '../../shared/library/components/inputs';
 
+import { NAME, TAGLINE, DESCRIPTION, FIELDS } from './constants';
+
+import {
+  reducer,
+  initialState,
+  SET_STEP,
+  SET_GALLERY_THUMBS,
+  SET_THUMBNAIL
+} from './reducer';
+
 export const GALLERY_THUMBNAIL_SIZE = 50;
 const DEFAULT_GALLERY_THUMB_PLACEHOLDERS = 3;
 const STEPS = 3;
 
+const renderField = (slug, dispatch, state) => {
+  const {
+    maxChars,
+    label,
+    required,
+    placeholder,
+    action,
+    InputComponent,
+    styles
+  } = FIELDS[slug];
+  return (
+    <Field styles={styles}>
+      <Label>
+        <LabelName>
+          {label}
+          {required && <LabelQualifier> - Required</LabelQualifier>}
+        </LabelName>
+      </Label>
+      <InputWrapper>
+        <InputComponent
+          onChange={e => dispatch({ type: action, value: e.target.value })}
+          type="text"
+          valid={state[`${slug}IsValid`]}
+          placeholder={placeholder}
+        />
+        <CharacterCounter>{`${
+          state[slug].length
+        }/${maxChars}`}</CharacterCounter>
+      </InputWrapper>
+    </Field>
+  );
+};
+
 const StepTwo = ({ link, client }) => {
-  const nameMaxCharacters = 40;
-  const [name, setName] = useState('');
-  const [nameIsValid, setNameIsValid] = useState(true);
-
-  const taglineMaxCharacters = 60;
-  const [tagline, setTagline] = useState('');
-  const [taglineIsValid, setTaglineIsValid] = useState(true);
-
-  const descriptionMaxCharacters = 260;
-  const [description, setDescription] = useState('');
-  const [descriptionIsValid, setDescriptionIsValid] = useState(true);
-
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { step } = state;
   const [selectedTopics, setSelectedTopics] = useState([]);
-
-  const [step, setStep] = useState(1);
 
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
 
@@ -88,7 +115,7 @@ const StepTwo = ({ link, client }) => {
       <StyledCircleDot
         onClick={() => {
           if (!isDisabled) {
-            setStep(i + 1);
+            dispatch({ type: SET_STEP, value: i + 1 });
           }
         }}
         disabled={isDisabled}
@@ -161,59 +188,8 @@ const StepTwo = ({ link, client }) => {
         <StyledPanel>
           {step === 1 && (
             <Fragment>
-              <Field>
-                <Label>
-                  <LabelName>
-                    Name of the product
-                    <LabelQualifier> - Required</LabelQualifier>
-                  </LabelName>
-                </Label>
-                <InputWrapper>
-                  <Input
-                    onChange={e => {
-                      const { value } = e.target;
-                      setName(value);
-                      if (value.length > nameMaxCharacters) {
-                        setNameIsValid(false);
-                      } else {
-                        setNameIsValid(true);
-                      }
-                    }}
-                    type="text"
-                    valid={nameIsValid}
-                    placeholder="Simply the name of the product"
-                  />
-                  <CharacterCounter>{`${
-                    name.length
-                  }/${nameMaxCharacters}`}</CharacterCounter>
-                </InputWrapper>
-              </Field>
-              <Field>
-                <Label>
-                  <LabelName>
-                    Tagline<LabelQualifier> - Required</LabelQualifier>
-                  </LabelName>
-                </Label>
-                <InputWrapper>
-                  <Input
-                    onChange={e => {
-                      const { value } = e.target;
-                      setTagline(value);
-                      if (value.length > taglineMaxCharacters) {
-                        setTaglineIsValid(false);
-                      } else {
-                        setTaglineIsValid(true);
-                      }
-                    }}
-                    type="text"
-                    valid={taglineIsValid}
-                    placeholder="Concise and descriptive tagline for the product"
-                  />
-                  <CharacterCounter>{`${
-                    tagline.length
-                  }/${taglineMaxCharacters}`}</CharacterCounter>
-                </InputWrapper>
-              </Field>
+              {renderField(NAME, dispatch, state)}
+              {renderField(TAGLINE, dispatch, state)}
               <Field>
                 <Label>
                   <LabelName>Topics</LabelName>
@@ -227,18 +203,10 @@ const StepTwo = ({ link, client }) => {
                           value={selectedTopics}
                           openOnFocus={false}
                           isMulti={true}
-                          // menuIsOpen={true}
                           noOptionsMessage={() => 'No topics found'}
-                          // onBlur={() => setMenuOpen(false)}
                           onChange={selectedOption => {
                             setSelectedTopics(selectedOption);
                           }}
-                          onInputChange={(query, { action }) => {
-                            // if (action === INPUT_CHANGE) {
-                            //   setMenuOpen(true);
-                            // }
-                          }}
-                          // options={options}
                           options={normalizeTopics(topics)}
                         />
                       )}
@@ -309,7 +277,11 @@ const StepTwo = ({ link, client }) => {
               </Field>
               <Field>
                 <Actions>
-                  <NextButton onClick={() => setStep(2)}>Next</NextButton>
+                  <NextButton
+                    onClick={() => dispatch({ type: SET_STEP, value: 2 })}
+                  >
+                    Next
+                  </NextButton>
                 </Actions>
               </Field>
             </Fragment>
@@ -356,32 +328,7 @@ const StepTwo = ({ link, client }) => {
                   {galleryThumbPlaceholders}
                 </GalleryThumbnailContainer>
               </Field>
-              <Field>
-                <Label>
-                  <LabelName>
-                    Description
-                    <LabelQualifier> - Required</LabelQualifier>
-                  </LabelName>
-                </Label>
-                <InputWrapper>
-                  <Textarea
-                    onChange={e => {
-                      const { value } = e.target;
-                      setDescription(value);
-                      if (value.length > descriptionMaxCharacters) {
-                        setDescriptionIsValid(false);
-                      } else {
-                        setDescriptionIsValid(true);
-                      }
-                    }}
-                    valid={descriptionIsValid}
-                    placeholder="Enter a brief description here..."
-                  />
-                  <CharacterCounter bottom={4} right={2}>{`${
-                    description.length
-                  }/${descriptionMaxCharacters}`}</CharacterCounter>
-                </InputWrapper>
-              </Field>
+              {renderField(DESCRIPTION, dispatch, state)}
             </Fragment>
           )}
           <StepsContainer>{stepButtons}</StepsContainer>
