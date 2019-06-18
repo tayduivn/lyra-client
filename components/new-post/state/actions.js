@@ -1,0 +1,10 @@
+export const SET_NAME = 'set-name';
+export const SET_LINK = 'set-link';
+export const SET_TAGLINE = 'set-tagline';
+export const SET_DESCRIPTION = 'set-description';
+export const SET_SELECTED_TOPICS = 'set-selected-topics';
+export const SET_STEP = 'set-step';
+export const SET_GALLERY_THUMBS = 'set-gallery-thumbs';
+export const SET_THUMBNAIL = 'set-thumbnail';
+export const UPLOADING_THUMBNAIL = 'uploading-thumbnail';
+export const UPLOADING_GALLERY_THUMB = 'uploading-gallery-thumb';

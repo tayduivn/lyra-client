@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
+import { DispatchContext, StateContext } from './state/provider';
+import { SET_LINK } from './state/actions';
 import styled from '@emotion/styled';
 import StyledButton from '../../shared/library/components/buttons/styled';
 import { BASE_TEXT, TITLE_TEXT } from '../../shared/style/typography';
@@ -49,8 +50,10 @@ const SubmitButtonWrapper = styled('div')({
   justifyContent: 'center'
 });
 
-const StepOne = ({ setLinkCallback }) => {
-  const [link, setLink] = useState(''); // '' is the initial state value
+const StepOne = () => {
+  const state = useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
+  const { link } = state;
   return (
     <StyledContainer>
       <Title>
@@ -61,12 +64,11 @@ const StepOne = ({ setLinkCallback }) => {
         <Input
           type="text"
           value={link}
-          onInput={e => setLink(e.target.value)}
+          onInput={e => dispatch({ type: SET_LINK, value: e.target.value })}
         />
         <SubmitButtonWrapper>
           <StyledButton
             onClick={() => {
-              setLinkCallback(link);
               Router.pushRoute(NEW_POST_STEP_TWO);
             }}
           >
@@ -76,10 +78,6 @@ const StepOne = ({ setLinkCallback }) => {
       </StyledPanel>
     </StyledContainer>
   );
-};
-
-StepOne.propTypes = {
-  setLinkCallback: PropTypes.func
 };
 
 export default StepOne;

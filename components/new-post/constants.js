@@ -4,7 +4,7 @@ export const DESCRIPTION = 'description';
 
 import { Input, Textarea } from '../../shared/library/components/inputs';
 
-import { SET_NAME, SET_TAGLINE, SET_DESCRIPTION } from './reducer';
+import { SET_NAME, SET_TAGLINE, SET_DESCRIPTION } from './state/actions';
 
 export const FIELDS = {
   [NAME]: {

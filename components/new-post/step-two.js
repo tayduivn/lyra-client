@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useReducer } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
+import { DispatchContext, StateContext } from './state/provider';
 import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import Select from 'react-select';
@@ -50,13 +51,15 @@ import {
 
 import { NAME, TAGLINE, DESCRIPTION, FIELDS } from './constants';
 
+import reducer from './state/reducer';
+import initialState from './state/state';
 import {
-  reducer,
-  initialState,
   SET_STEP,
   SET_GALLERY_THUMBS,
-  SET_THUMBNAIL
-} from './reducer';
+  SET_THUMBNAIL,
+  UPLOADING_THUMBNAIL,
+  UPLOADING_GALLERY_THUMB
+} from './state/actions';
 
 export const GALLERY_THUMBNAIL_SIZE = 50;
 const DEFAULT_GALLERY_THUMB_PLACEHOLDERS = 3;
@@ -95,9 +98,12 @@ const renderField = (slug, dispatch, state) => {
   );
 };
 
-const StepTwo = ({ link, client }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { step } = state;
+const StepTwo = ({ client }) => {
+  const state = useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
+  console.log('state', state);
+  console.log('dispatch', dispatch);
+  const { step, link } = state;
   const [selectedTopics, setSelectedTopics] = useState([]);
 
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
