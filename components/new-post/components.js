@@ -15,9 +15,12 @@ import {
   WHITE,
   POWDER_BLUE,
   FOCUS_LAVENDER,
+  LAVENDER,
   DETROIT
 } from '../../shared/style/colors';
+
 const THUMBNAIL_SIZE = 80;
+export const GALLERY_THUMBNAIL_SIZE = 50;
 
 export const StyledContainer = styled(Container)({
   flexDirection: 'column',
@@ -165,6 +168,16 @@ export const Thumbnail = styled('img')({
   height: THUMBNAIL_SIZE
 });
 
+export const ActionButton = styled(StyledButton)({
+  marginLeft: 'auto',
+  backgroundColor: FOCUS_LAVENDER,
+  borderColor: FOCUS_LAVENDER,
+  '&:disabled': {
+    borderColor: LAVENDER,
+    backgroundColor: LAVENDER
+  }
+});
+
 export const NextButton = styled(StyledButton)({
   marginLeft: 'auto'
 });
@@ -250,6 +263,35 @@ export const GalleryThumbnailContainer = styled('div')({
 });
 
 export const StepsContainer = styled('div')({});
+
+const GalleryThumbnail = styled('img')({
+  width: GALLERY_THUMBNAIL_SIZE,
+  height: GALLERY_THUMBNAIL_SIZE,
+  borderRadius: 3
+});
+
+const GalleryThumbnailWrapper = styled('div')({
+  position: 'relative',
+  marginTop: 10,
+  marginRight: 10,
+  [StyledCircleCloseIcon]: {
+    display: 'none'
+  },
+  '&:hover': {
+    [StyledCircleCloseIcon]: {
+      display: 'block'
+    }
+  }
+});
+
+const GalleryThumbComponent = ({ url, index, onRemove }) => {
+  return (
+    <GalleryThumbnailWrapper>
+      <StyledCircleCloseIcon onClick={() => onRemove(index)} />
+      <GalleryThumbnail src={url} />
+    </GalleryThumbnailWrapper>
+  );
+};
 
 const SortableItem = SortableElement(({ value, onRemove, index }) => (
   <GalleryThumbComponent url={value} index={index} onRemove={onRemove} />

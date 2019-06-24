@@ -11,7 +11,8 @@ const initialState = {
   thumbnail: null,
   uploadingThumbnail: false,
   uploadingGalleryThumb: false,
-  link: null
+  link: '',
+  linkIsValid: true
 };
 
 export default initialState;

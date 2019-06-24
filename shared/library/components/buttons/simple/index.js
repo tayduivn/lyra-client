@@ -11,5 +11,8 @@ export default styled('button')({
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: LILAC
+  },
+  '&:disabled': {
+    cursor: 'not-allowed'
   }
 });

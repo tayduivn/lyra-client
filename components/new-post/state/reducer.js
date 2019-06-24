@@ -1,8 +1,6 @@
-import {
-  NAME_MAX_CHARS,
-  TAGLINE_MAX_CHARS,
-  DESCRIPTION_MAX_CHARS
-} from '../constants';
+import { FIELDS } from '../constants';
+
+import { isValidUrl } from '../../../shared/utils';
 
 import {
   SET_NAME,
@@ -24,7 +22,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         name: value,
-        nameIsValid: value.length <= NAME_MAX_CHARS
+        nameIsValid: value.length <= FIELDS.name.maxChars
       };
     }
     case SET_TAGLINE: {
@@ -32,7 +30,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         tagline: value,
-        taglineIsValid: value.length <= TAGLINE_MAX_CHARS
+        taglineIsValid: value.length <= FIELDS.tagline.maxChars
       };
     }
     case SET_DESCRIPTION: {
@@ -40,7 +38,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         description: value,
-        descriptionIsValid: value.length <= DESCRIPTION_MAX_CHARS
+        descriptionIsValid: value.length <= FIELDS.description.maxChars
       };
     }
     case SET_STEP: {
@@ -50,34 +48,41 @@ const reducer = (state, action) => {
       };
     }
     case SET_LINK: {
+      let { value } = action;
       return {
         ...state,
-        link: action.value
+        link: value,
+        linkIsValid: value.length === 0 ? true : isValidUrl(value)
       };
     }
     case SET_SELECTED_TOPICS: {
       return {
-        ...state
+        ...state,
+        selectedTopics: action.value
       };
     }
     case SET_GALLERY_THUMBS: {
       return {
-        ...state
+        ...state,
+        galleryThumbs: action.value
       };
     }
     case SET_THUMBNAIL: {
       return {
-        ...state
+        ...state,
+        thumbnail: action.value
       };
     }
     case UPLOADING_THUMBNAIL: {
       return {
-        ...state
+        ...state,
+        uploadingThumbnail: action.value
       };
     }
     case UPLOADING_GALLERY_THUMB: {
       return {
-        ...state
+        ...state,
+        uploadingGalleryThumb: action.value
       };
     }
     default:

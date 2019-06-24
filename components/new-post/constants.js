@@ -1,12 +1,26 @@
 export const NAME = 'name';
 export const TAGLINE = 'tagline';
 export const DESCRIPTION = 'description';
+export const LINK = 'link';
 
 import { Input, Textarea } from '../../shared/library/components/inputs';
 
-import { SET_NAME, SET_TAGLINE, SET_DESCRIPTION } from './state/actions';
+import {
+  SET_NAME,
+  SET_TAGLINE,
+  SET_DESCRIPTION,
+  SET_LINK
+} from './state/actions';
 
 export const FIELDS = {
+  [LINK]: {
+    maxChars: null,
+    label: 'Link',
+    required: true,
+    placeholder: 'URL of the product (eg. https://snapchat.com)',
+    action: SET_LINK,
+    InputComponent: Input
+  },
   [NAME]: {
     maxChars: 40,
     label: 'Name of the product',

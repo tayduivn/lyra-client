@@ -11,6 +11,10 @@ export default styled(SimpleButton)({
   fontWeight: WEIGHT.BOLD,
   '&:hover': {
     backgroundColor: FOCUS_LAVENDER,
-    borderColor: FOCUS_LAVENDER
+    borderColor: FOCUS_LAVENDER,
+    '&:disabled': {
+      borderColor: LAVENDER,
+      backgroundColor: LAVENDER
+    }
   }
 });
