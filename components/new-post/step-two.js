@@ -1,6 +1,11 @@
 /** @jsx jsx */ import { jsx } from '@emotion/core';
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import styled from '@emotion/styled';
+import { withApollo } from 'react-apollo';
 import { DispatchContext, StateContext } from './state/provider';
+
+import { CREATE_POST } from '../../data/mutations';
 
 import Topics from './components/topics';
 import DownloadLink from './components/download-link';
@@ -15,11 +20,15 @@ import {
   StyledPanel,
   Content,
   Preview,
-  NextButton,
   Actions,
   StyledCircleDot,
-  StepsContainer
+  StepsContainer,
+  ActionButton
 } from './components';
+
+const StyledActionButton = styled(ActionButton)({
+  marginLeft: 'auto'
+});
 
 import { Field } from '../../shared/library/components/inputs';
 
@@ -28,10 +37,17 @@ import { SET_STEP } from './state/actions';
 
 const STEPS = 2;
 
-const StepTwo = () => {
+const StepTwo = ({ client }) => {
   const state = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
-  const { step, nameIsValid, taglineIsValid, thumbnail } = state;
+  const {
+    step,
+    nameIsValid,
+    taglineIsValid,
+    descriptionIsValid,
+    description,
+    thumbnail
+  } = state;
 
   const stepButtons = [];
   for (let i = 0; i < STEPS; i++) {
@@ -49,6 +65,7 @@ const StepTwo = () => {
   }
 
   const stepOneIsValid = nameIsValid && taglineIsValid && thumbnail != null;
+  const stepTwoIsValid = descriptionIsValid && description.length > 0;
 
   return (
     <StyledContainer>
@@ -66,12 +83,12 @@ const StepTwo = () => {
             <UploadThumbnail />
             <Field>
               <Actions>
-                <NextButton
+                <StyledActionButton
                   disabled={!stepOneIsValid}
                   onClick={() => dispatch({ type: SET_STEP, value: 2 })}
                 >
                   Next
-                </NextButton>
+                </StyledActionButton>
               </Actions>
             </Field>
           </div>
@@ -80,12 +97,32 @@ const StepTwo = () => {
             {renderField(DESCRIPTION)}
             <Field>
               <Actions>
-                <NextButton
-                  disabled={false}
-                  onClick={() => console.log('submitting!!!')}
+                <StyledActionButton
+                  disabled={!stepTwoIsValid}
+                  onClick={() => {
+                    console.log('submitting!!!', client);
+                    client
+                      .mutate({
+                        mutation: CREATE_POST,
+                        variables: {
+                          link: 'lorem ipsum',
+                          name: 'lorem ipsum',
+                          tagline: 'lorem ipsum',
+                          description: 'lorem ipsum',
+                          thumbnail: 'lorem ipsum'
+                        }
+                      })
+                      .then(({ data }) => {
+                        console.log('data', data);
+                      })
+                      // eslint-disable-next-line no-unused-vars
+                      .catch(err => {
+                        console.log('ERR', err);
+                      });
+                  }}
                 >
                   Submit!
-                </NextButton>
+                </StyledActionButton>
               </Actions>
             </Field>
           </div>
@@ -97,4 +134,8 @@ const StepTwo = () => {
   );
 };
 
-export default StepTwo;
+StepTwo.propTypes = {
+  client: PropTypes.any
+};
+
+export default withApollo(StepTwo);

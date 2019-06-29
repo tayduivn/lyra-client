@@ -16,6 +16,26 @@ export const UPDATE_FOLLOWED_TOPIC = gql`
   }
 `;
 
+export const CREATE_POST = gql`
+  mutation createPost(
+    $link: String
+    $name: String
+    $tagline: String
+    $description: String
+    $thumbnail: String
+  ) {
+    createPost(
+      link: $link
+      name: $name
+      tagline: $tagline
+      description: $description
+      thumbnail: $thumbnail
+    ) {
+      id
+    }
+  }
+`;
+
 export const VOTE = gql`
   mutation vote($postId: ID!) {
     vote(postId: $postId) {

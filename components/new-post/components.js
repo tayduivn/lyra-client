@@ -178,10 +178,6 @@ export const ActionButton = styled(StyledButton)({
   }
 });
 
-export const NextButton = styled(StyledButton)({
-  marginLeft: 'auto'
-});
-
 export const Actions = styled('div')({
   display: 'flex'
 });
