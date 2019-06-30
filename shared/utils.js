@@ -21,6 +21,10 @@ export const formatDate = date => {
   return moment(date).format('MMMM Do');
 };
 
+export const uploadUrl = filename => {
+  return `https://s3.amazonaws.com/lyra-labs-development/${filename}`;
+};
+
 export const uploadImage = (client, file, cb) => {
   const fileName = uuidv4();
   client

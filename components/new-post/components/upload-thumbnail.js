@@ -4,7 +4,7 @@ import { DispatchContext, StateContext } from '../state/provider';
 import { SET_THUMBNAIL, UPLOADING_THUMBNAIL } from '../state/actions';
 import { useDropzone } from 'react-dropzone';
 import { withApollo } from 'react-apollo';
-import { uploadImage } from '../../../shared/utils';
+import { uploadImage, uploadUrl } from '../../../shared/utils';
 
 import Spinner from '../../../shared/library/components/progress-indicators/spinner';
 
@@ -45,10 +45,10 @@ const UploadThumbnail = ({ client }) => {
         preview: URL.createObjectURL(file)
       });
       dispatch({ type: UPLOADING_THUMBNAIL, value: true });
-      uploadImage(client, file, result => {
+      uploadImage(client, file, (result, filename) => {
+        file.url = uploadUrl(filename);
         dispatch({ type: UPLOADING_THUMBNAIL, value: false });
         dispatch({ type: SET_THUMBNAIL, value: file });
-        console.log('Response from s3', result);
       });
     }
   });

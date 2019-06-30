@@ -4,7 +4,7 @@ import { SET_GALLERY_THUMBS, UPLOADING_GALLERY_THUMB } from '../state/actions';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 import { withApollo } from 'react-apollo';
-import { uploadImage } from '../../../shared/utils';
+import { uploadImage, uploadUrl } from '../../../shared/utils';
 import arrayMove from 'array-move';
 
 import Spinner from '../../../shared/library/components/progress-indicators/spinner';
@@ -61,9 +61,10 @@ const Gallery = ({ client }) => {
       const file = acceptedFiles[0];
       dispatch({ type: UPLOADING_GALLERY_THUMB, value: true });
       uploadImage(client, file, (result, filename) => {
-        // const url = `https://s3.amazonaws.com/lyra-labs-development/${filename}`;
         let thumbs = galleryThumbs;
-        thumbs.push(URL.createObjectURL(file));
+        file.preview = URL.createObjectURL(file);
+        file.url = uploadUrl(filename);
+        thumbs.push(file);
         dispatch({ type: SET_GALLERY_THUMBS, value: thumbs });
         dispatch({ type: UPLOADING_GALLERY_THUMB, value: false });
       });
@@ -105,7 +106,7 @@ const Gallery = ({ client }) => {
       <GalleryThumbnailContainer>
         <SortableList
           axis={'xy'}
-          items={galleryThumbs}
+          items={galleryThumbs.map(item => item.preview)}
           onSortEnd={onSortEnd}
           onRemove={index => {
             dispatch({

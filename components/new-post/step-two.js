@@ -100,25 +100,34 @@ const StepTwo = ({ client }) => {
                 <StyledActionButton
                   disabled={!stepTwoIsValid}
                   onClick={() => {
+                    console.log('state', state);
                     console.log('submitting!!!', client);
-                    client
-                      .mutate({
-                        mutation: CREATE_POST,
-                        variables: {
-                          link: 'lorem ipsum',
-                          name: 'lorem ipsum',
-                          tagline: 'lorem ipsum',
-                          description: 'lorem ipsum',
-                          thumbnail: 'lorem ipsum'
-                        }
-                      })
-                      .then(({ data }) => {
-                        console.log('data', data);
-                      })
-                      // eslint-disable-next-line no-unused-vars
-                      .catch(err => {
-                        console.log('ERR', err);
-                      });
+                    const {
+                      link,
+                      name,
+                      tagline,
+                      description,
+                      thumbnail
+                    } = state;
+                    console.log('state', state);
+                    // client
+                    //   .mutate({
+                    //     mutation: CREATE_POST,
+                    //     variables: {
+                    //       link: 'lorem ipsum',
+                    //       name: 'lorem ipsum',
+                    //       tagline: 'lorem ipsum',
+                    //       description: 'lorem ipsum',
+                    //       thumbnail: 'lorem ipsum'
+                    //     }
+                    //   })
+                    //   .then(({ data }) => {
+                    //     console.log('data', data);
+                    //   })
+                    //   // eslint-disable-next-line no-unused-vars
+                    //   .catch(err => {
+                    //     console.log('ERR', err);
+                    //   });
                   }}
                 >
                   Submit!
