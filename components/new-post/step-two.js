@@ -106,28 +106,32 @@ const StepTwo = ({ client }) => {
                       link,
                       name,
                       tagline,
+                      selectedTopics,
                       description,
-                      thumbnail
+                      thumbnail,
+                      galleryThumbs
                     } = state;
                     console.log('state', state);
-                    // client
-                    //   .mutate({
-                    //     mutation: CREATE_POST,
-                    //     variables: {
-                    //       link: 'lorem ipsum',
-                    //       name: 'lorem ipsum',
-                    //       tagline: 'lorem ipsum',
-                    //       description: 'lorem ipsum',
-                    //       thumbnail: 'lorem ipsum'
-                    //     }
-                    //   })
-                    //   .then(({ data }) => {
-                    //     console.log('data', data);
-                    //   })
-                    //   // eslint-disable-next-line no-unused-vars
-                    //   .catch(err => {
-                    //     console.log('ERR', err);
-                    //   });
+                    client
+                      .mutate({
+                        mutation: CREATE_POST,
+                        variables: {
+                          link,
+                          name,
+                          tagline,
+                          description,
+                          topics: selectedTopics.map(topic => topic.value),
+                          thumbnail: thumbnail.url,
+                          galleryThumbs: galleryThumbs.map(thumb => thumb.url)
+                        }
+                      })
+                      .then(({ data }) => {
+                        console.log('data', data);
+                      })
+                      // eslint-disable-next-line no-unused-vars
+                      .catch(err => {
+                        console.log('ERR', err);
+                      });
                   }}
                 >
                   Submit!

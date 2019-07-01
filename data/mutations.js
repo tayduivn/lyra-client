@@ -23,6 +23,8 @@ export const CREATE_POST = gql`
     $tagline: String
     $description: String
     $thumbnail: String
+    $topics: [String]
+    $galleryThumbs: [String]
   ) {
     createPost(
       link: $link
@@ -30,6 +32,8 @@ export const CREATE_POST = gql`
       tagline: $tagline
       description: $description
       thumbnail: $thumbnail
+      topics: $topics
+      galleryThumbs: $galleryThumbs
     ) {
       id
     }
