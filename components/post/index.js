@@ -32,7 +32,7 @@ export const Container = styled('li')(
   })
 );
 
-export const Link = styled('div')({
+export const Body = styled('div')({
   backgroundColor: WHITE,
   '&:hover': {
     backgroundColor: ALABASTER
@@ -42,6 +42,12 @@ export const Link = styled('div')({
   flexDirection: 'row',
   borderTop: `1px solid ${LILAC}`,
   cursor: 'pointer'
+});
+
+const Wrapper = styled('div')({});
+
+const Link = styled('a')({
+  textDecoration: 'none'
 });
 
 const Thumbnail = styled('img')({
@@ -120,6 +126,7 @@ const Votes = styled('div')(
 
 const Post = ({
   id,
+  slug,
   name,
   description,
   thumbnail,
@@ -129,14 +136,18 @@ const Post = ({
   upvoted
 }) => (
   <Container visible={visible}>
-    <Link>
-      <Thumbnail src={thumbnail} />
-      <Content>
-        <Name>{name}</Name>
-        <Description>{description}</Description>
-        <Footer>{tags.length > 0 && <TagList tags={tags} />}</Footer>
-      </Content>
-    </Link>
+    <Wrapper>
+      <Link href={`/posts/${slug}`}>
+        <Body>
+          <Thumbnail src={thumbnail} />
+          <Content>
+            <Name>{name}</Name>
+            <Description>{description}</Description>
+            <Footer>{tags.length > 0 && <TagList tags={tags} />}</Footer>
+          </Content>
+        </Body>
+      </Link>
+    </Wrapper>
     <User>
       {({ data: { me } }) => (
         <Mutation
