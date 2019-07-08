@@ -10,6 +10,12 @@ export const Container = styled('div')({
   display: 'flex'
 });
 
+export const Section = styled('div')({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column'
+});
+
 export const Main = styled('main')({
   flex: 1,
   padding: 15

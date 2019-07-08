@@ -50,7 +50,7 @@ const Link = styled('a')({
   textDecoration: 'none'
 });
 
-const Thumbnail = styled('img')({
+export const Thumbnail = styled('img')({
   width: 80,
   height: 80,
   marginRight: 10
@@ -70,7 +70,7 @@ const Name = styled('div')({
   color: BLACK
 });
 
-const Description = styled('div')({
+const Tagline = styled('div')({
   ...BASE_TEXT,
   color: GUNSMOKE,
   lineHeight: '20px',
@@ -128,6 +128,7 @@ const Post = ({
   id,
   slug,
   name,
+  tagline,
   description,
   thumbnail,
   tags,
@@ -142,7 +143,7 @@ const Post = ({
           <Thumbnail src={thumbnail} />
           <Content>
             <Name>{name}</Name>
-            <Description>{description}</Description>
+            <Tagline>{tagline}</Tagline>
             <Footer>{tags.length > 0 && <TagList tags={tags} />}</Footer>
           </Content>
         </Body>

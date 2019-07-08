@@ -10,6 +10,7 @@ export const FEED_QUERY = gql`
         name
         slug
         description
+        tagline
         thumbnail
         votesCount
         upvoted
@@ -21,6 +22,30 @@ export const FEED_QUERY = gql`
           name
           slug
         }
+      }
+    }
+  }
+`;
+
+export const POST_QUERY = gql`
+  query post($slug: String!) {
+    post(slug: $slug) {
+      id
+      name
+      slug
+      description
+      tagline
+      thumbnail
+      votesCount
+      upvoted
+      link
+      votes {
+        id
+      }
+      topics {
+        id
+        name
+        slug
       }
     }
   }

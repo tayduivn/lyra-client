@@ -91,6 +91,7 @@ const PostList = ({ date, posts }) => {
             id={post.id}
             visible={showAll ? true : index < DEFAULT_VISIBLE}
             key={post.id}
+            tagline={post.tagline}
             slug={post.slug}
             name={post.name}
             description={post.description}

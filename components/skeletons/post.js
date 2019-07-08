@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { shine } from '../../shared/style/animations';
 import { LILAC, ALABASTER, WHITE } from '../../shared/style/colors';
-import { Container, Link, Content } from '../post';
+import { Container, Body, Content } from '../post';
 
 const BASE_COLOR = LILAC;
 const SHINE_COLOR = ALABASTER;
@@ -38,13 +38,13 @@ const Thumbnail = styled('div')({
 
 const SkeletonPost = () => (
   <Container visible={true}>
-    <Link>
+    <Body>
       <Thumbnail />
       <Content>
         <Line />
         <LongerLine />
       </Content>
-    </Link>
+    </Body>
   </Container>
 );
 
