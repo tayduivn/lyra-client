@@ -27,7 +27,13 @@ const Post = ({
 }) => (
   <Container>
     <Section>
-      <Header thumbnail={thumbnail} name={name} link={link} />
+      <Header
+        thumbnail={thumbnail}
+        name={name}
+        link={link}
+        tagline={tagline}
+        topics={topics}
+      />
       <Body>
         <Main>Main</Main>
         <Aside>Side Panel</Aside>

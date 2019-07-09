@@ -70,7 +70,7 @@ const Name = styled('div')({
   color: BLACK
 });
 
-const Tagline = styled('div')({
+export const Tagline = styled('div')({
   ...BASE_TEXT,
   color: GUNSMOKE,
   lineHeight: '20px',
