@@ -5,7 +5,8 @@ import {
   Container,
   Section,
   Main,
-  Aside
+  Aside,
+  Panel
 } from '../../shared/library/components/layout';
 
 const Body = styled('div')({
@@ -35,7 +36,9 @@ const Post = ({
         topics={topics}
       />
       <Body>
-        <Main>Main</Main>
+        <Main>
+          <Panel>Gallery</Panel>
+        </Main>
         <Aside>Side Panel</Aside>
       </Body>
     </Section>

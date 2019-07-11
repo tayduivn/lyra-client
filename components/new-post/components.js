@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Container } from '../../shared/library/components/layout';
+import { Container, Panel } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
-import Panel from '../../shared/library/containers/panel';
 import ThumbnailPlaceholderIcon from '../../shared/style/icons/thumbnail-placeholder.svg';
 import CircleCloseIcon from '../../shared/style/icons/circle-close.svg';
 import CircleDot from '../../shared/style/icons/circle-dot.svg';

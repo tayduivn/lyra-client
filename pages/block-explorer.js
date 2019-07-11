@@ -1,8 +1,12 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import { Container, Main, Aside } from '../shared/library/components/layout';
+import {
+  Container,
+  Main,
+  Aside,
+  Panel
+} from '../shared/library/components/layout';
 
-import Panel from '../shared/library/containers/panel';
 import SimpleButton from '../shared/library/components/buttons/simple';
 
 import { MINT_TOKENS } from '../data/mutations';

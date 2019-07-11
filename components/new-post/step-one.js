@@ -2,10 +2,9 @@ import React, { useContext } from 'react';
 import { StateContext } from './state/provider';
 import styled from '@emotion/styled';
 import { Router } from '../../routes';
-import { Container } from '../../shared/library/components/layout';
+import { Container, Panel } from '../../shared/library/components/layout';
 import { Title } from '../../shared/library/components/typography';
 import { NEW_POST_STEP_TWO } from '../../shared/constants/routes';
-import Panel from '../../shared/library/containers/panel';
 import { LINK } from './constants';
 
 import { ActionButton } from './components';
