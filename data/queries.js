@@ -37,6 +37,7 @@ export const POST_QUERY = gql`
       tagline
       thumbnail
       votesCount
+      galleryThumbs
       upvoted
       link
       votes {

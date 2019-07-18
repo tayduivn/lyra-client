@@ -10,9 +10,9 @@ const StyledTagline = styled(Tagline)({
 });
 
 const Container = styled('div')({
-  display: 'flex',
-  padding: '0 15px 0 15px'
+  display: 'flex'
 });
+
 const Link = styled('a')({
   ...BASE_TEXT,
   fontSize: 20,

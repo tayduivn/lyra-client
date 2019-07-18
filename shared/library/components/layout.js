@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { WHITE } from '../../style/colors';
+import { TABLET } from '../../style/breakpoints';
 
 const MAX_WIDTH = 1100;
 const MIN_WIDTH = 320;
@@ -8,7 +9,8 @@ export const Container = styled('div')({
   margin: 'auto',
   maxWidth: MAX_WIDTH,
   minWidth: MIN_WIDTH,
-  display: 'flex'
+  display: 'flex',
+  padding: '0px 15px'
 });
 
 export const Section = styled('div')({
@@ -26,13 +28,14 @@ export const Panel = styled('div')({
 
 export const Main = styled('main')({
   flex: 1,
-  padding: 15
+  maxWidth: 720,
+  minWidth: 300
 });
 
 export const Aside = styled('aside')({
-  // [`@media only screen and (max-width: ${MAX_WIDTH}px)`]: {
-  [`@media only screen and (max-width: 769px)`]: {
+  [TABLET]: {
     display: 'none'
   },
+  marginLeft: 30,
   width: 330
 });
