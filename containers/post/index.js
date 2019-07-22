@@ -7,7 +7,8 @@ import {
   Section,
   Main,
   Aside,
-  Panel
+  Panel,
+  Divider
 } from '../../shared/library/components/layout';
 import BigButton from '../../shared/library/components/buttons/big';
 
@@ -92,9 +93,15 @@ const Description = styled('div')({
   marginTop: 20
 });
 
+const StyledDivider = styled(Divider)({
+  marginTop: 20,
+  marginBottom: 20
+});
+
+const Upvotes = styled('div')({});
+
 const Post = ({
   post: {
-    id,
     tagline,
     slug,
     name,
@@ -175,10 +182,9 @@ const Post = ({
                     <Thumbnails>
                       {galleryThumbs.map((image, index) => (
                         <Thumbnail
-                          onClick={() => {
-                            console.log('imageRefs[index]', imageRefs[index]);
-                            imageRefs[index].current.scrollIntoView();
-                          }}
+                          onClick={() =>
+                            imageRefs[index].current.scrollIntoView()
+                          }
                         >
                           <img src={image} />
                         </Thumbnail>
@@ -186,11 +192,15 @@ const Post = ({
                     </Thumbnails>
                   </GalleryWrapper>
                 )}
+                <StyledDivider />
                 <Description>{description}</Description>
               </StyledPanel>
             </Main>
             <Aside>
-              <BigButton>Upvote!</BigButton>
+              <Upvotes>
+                <BigButton>Upvote!</BigButton>
+              </Upvotes>
+              <StyledDivider />
             </Aside>
           </Body>
         </Section>

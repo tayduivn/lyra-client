@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { WHITE } from '../../style/colors';
+import { WHITE, LILAC } from '../../style/colors';
 import { TABLET } from '../../style/breakpoints';
 
 const MAX_WIDTH = 1100;
@@ -38,4 +38,9 @@ export const Aside = styled('aside')({
   },
   marginLeft: 30,
   width: 330
+});
+
+export const Divider = styled('div')({
+  borderBottom: `1px solid ${LILAC}`,
+  width: '100%'
 });
