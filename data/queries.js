@@ -40,6 +40,18 @@ export const POST_QUERY = gql`
       galleryThumbs
       upvoted
       link
+      creators {
+        avatar
+        username
+        headline
+        name
+      }
+      submitter {
+        avatar
+        username
+        headline
+        name
+      }
       votes {
         id
       }

@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import Header from './header';
+import Creators from './creators';
 import {
   Container,
   Section,
@@ -103,6 +104,8 @@ const Upvotes = styled('div')({});
 const Post = ({
   post: {
     tagline,
+    submitter,
+    creators,
     slug,
     name,
     link,
@@ -201,6 +204,7 @@ const Post = ({
                 <BigButton>Upvote!</BigButton>
               </Upvotes>
               <StyledDivider />
+              <Creators submitter={submitter} creators={creators} />
             </Aside>
           </Body>
         </Section>
