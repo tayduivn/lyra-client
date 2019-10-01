@@ -74,3 +74,17 @@ export const isValidUrl = url => {
   ); // fragment locator
   return pattern.test(url);
 };
+
+export const extractMentionedUsers = text => {
+  const regex = /@\[(.+?)\]\((.+?)\)/g;
+  const usernames = (text.match(regex) || []).map(e => e.replace(regex, '$1'));
+  const userIds = (text.match(regex) || []).map(e => e.replace(regex, '$2'));
+  return usernames.map((username, index) => ({ username, id: userIds[index] }));
+};
+
+export const buildInitialCommentReply = text => {
+  const users = extractMentionedUsers(text);
+  return users.length > 0
+    ? `${users.map(({ username, id }) => `@[${username}](${id})`).join(' ')} `
+    : '';
+};

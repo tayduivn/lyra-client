@@ -11,7 +11,6 @@ const PostPage = ({
     query: { slug }
   }
 }) => {
-  console.log('client', client);
   return (
     <Query query={POST_QUERY} variables={{ slug }}>
       {({ loading, error, data: { post }, fetchMore }) => {

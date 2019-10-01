@@ -100,8 +100,6 @@ const StepTwo = ({ client }) => {
                 <StyledActionButton
                   disabled={!stepTwoIsValid}
                   onClick={() => {
-                    console.log('state', state);
-                    console.log('submitting!!!', client);
                     const {
                       link,
                       name,
@@ -111,7 +109,6 @@ const StepTwo = ({ client }) => {
                       thumbnail,
                       galleryThumbs
                     } = state;
-                    console.log('state', state);
                     client
                       .mutate({
                         mutation: CREATE_POST,
@@ -141,7 +138,7 @@ const StepTwo = ({ client }) => {
           </div>
           <StepsContainer>{stepButtons}</StepsContainer>
         </StyledPanel>
-        <Preview>Cool Bro</Preview>
+        <Preview>Preview Placeholder</Preview>
       </Content>
     </StyledContainer>
   );

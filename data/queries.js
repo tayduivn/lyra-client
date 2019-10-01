@@ -1,5 +1,16 @@
 import gql from 'graphql-tag';
 
+export const USER_SEARCH = gql`
+  query userSearch($keyword: String) {
+    userSearch(keyword: $keyword) {
+      id
+      username
+      name
+      avatar
+    }
+  }
+`;
+
 export const FEED_QUERY = gql`
   query sections($first: Int!, $skip: Int!, $after: String) {
     sections(first: $first, skip: $skip, after: $after) {
@@ -40,6 +51,29 @@ export const POST_QUERY = gql`
       galleryThumbs
       upvoted
       link
+      comments {
+        id
+        text
+        votesCount
+        author {
+          avatar
+          username
+          name
+        }
+        replies {
+          id
+          text
+          votesCount
+          author {
+            avatar
+            username
+            name
+          }
+          replies {
+            id
+          }
+        }
+      }
       creators {
         avatar
         username
@@ -81,6 +115,7 @@ export const CURRENT_USER_QUERY = gql`
       email
       name
       avatar
+      username
       followedTopics {
         id
         name

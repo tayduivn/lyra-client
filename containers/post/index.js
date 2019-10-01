@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import { BASE_TEXT, WEIGHT } from '../../shared/style/typography';
 import Header from './header';
 import Creators from './creators';
+import CommentForm from './comment-form';
+import CommentsList from './comments-list';
 import {
   Container,
   Section,
@@ -12,8 +14,29 @@ import {
   Divider
 } from '../../shared/library/components/layout';
 import BigButton from '../../shared/library/components/buttons/big';
+import { DETROIT, LILAC } from '../../shared/style/colors';
 
 const MAX_HEIGHT = 500;
+const TOP = 'top';
+const BOTTOM = 'bottom';
+
+const CommentFormWrapper = styled('div')(
+  {
+    borderBottom: `1px solid ${LILAC}`,
+    marginLeft: -20,
+    marginRight: -20,
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  ({ position = TOP }) => ({
+    borderBottom: position === TOP ? `1px solid ${LILAC}` : 0,
+    borderTop: position === BOTTOM ? `1px solid ${LILAC}` : 0,
+    marginTop: position === TOP ? 0 : 20,
+    marginBottom: position === TOP ? 20 : 0,
+    paddingTop: position === TOP ? 0 : 20,
+    paddingBottom: position === TOP ? 20 : 0
+  })
+);
 
 const Thumbnails = styled('div')({
   display: 'flex',
@@ -22,6 +45,12 @@ const Thumbnails = styled('div')({
 
 const StyledPanel = styled(Panel)({
   overflow: 'hidden'
+});
+
+const StyledMain = styled(Main)({
+  ' > div:first-of-type': {
+    marginBottom: 30
+  }
 });
 
 const Body = styled('div')({
@@ -99,13 +128,27 @@ const StyledDivider = styled(Divider)({
   marginBottom: 20
 });
 
+const SectionHeader = styled('div')({
+  marginBottom: 10
+});
+
+const SectionLabel = styled('span')({
+  ...BASE_TEXT,
+  fontWeight: WEIGHT.BOLD,
+  fontSize: 11,
+  color: DETROIT,
+  textTransform: 'uppercase'
+});
+
 const Upvotes = styled('div')({});
 
 const Post = ({
   post: {
+    id,
     tagline,
     submitter,
     creators,
+    comments,
     slug,
     name,
     link,
@@ -123,8 +166,6 @@ const Post = ({
 
   const imageRefs = {};
 
-  console.log('description', description);
-
   const setDimensions = () => {
     setImageWidth(el.current.clientWidth);
     setImageHeight(Object.values(imageRefs)[0].current.clientHeight);
@@ -136,6 +177,8 @@ const Post = ({
     },
     [el.current]
   );
+
+  console.log('post slug', slug);
 
   useEffect(() => {
     window.addEventListener('resize', setDimensions);
@@ -162,7 +205,7 @@ const Post = ({
       <Container>
         <Section>
           <Body>
-            <Main>
+            <StyledMain>
               <StyledPanel>
                 {galleryThumbs.length > 0 && (
                   <GalleryWrapper ref={el}>
@@ -198,7 +241,33 @@ const Post = ({
                 <StyledDivider />
                 <Description>{description}</Description>
               </StyledPanel>
-            </Main>
+              <SectionHeader>
+                <SectionLabel>Discussion</SectionLabel>
+              </SectionHeader>
+              <Section>
+                <Panel>
+                  <CommentFormWrapper position={TOP}>
+                    <CommentForm postId={id} />
+                  </CommentFormWrapper>
+                  <CommentsList comments={comments} />
+                  {comments.length > 3 && (
+                    <CommentFormWrapper position={BOTTOM}>
+                      <CommentForm postId={id} />
+                    </CommentFormWrapper>
+                  )}
+                </Panel>
+              </Section>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            </StyledMain>
             <Aside>
               <Upvotes>
                 <BigButton>Upvote!</BigButton>

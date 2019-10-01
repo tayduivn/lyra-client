@@ -16,6 +16,14 @@ export const UPDATE_FOLLOWED_TOPIC = gql`
   }
 `;
 
+export const CREATE_COMMENT = gql`
+  mutation createComment($postId: ID!, $parentId: ID, $body: String!) {
+    createComment(postId: $postId, parentId: $parentId, body: $body) {
+      id
+    }
+  }
+`;
+
 export const CREATE_POST = gql`
   mutation createPost(
     $link: String

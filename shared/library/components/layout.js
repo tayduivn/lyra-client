@@ -10,7 +10,8 @@ export const Container = styled('div')({
   maxWidth: MAX_WIDTH,
   minWidth: MIN_WIDTH,
   display: 'flex',
-  padding: '0px 15px'
+  padding: '0px 15px',
+  boxSizing: 'border-box'
 });
 
 export const Section = styled('div')({
@@ -37,7 +38,7 @@ export const Aside = styled('aside')({
     display: 'none'
   },
   marginLeft: 30,
-  width: 330
+  width: 320
 });
 
 export const Divider = styled('div')({

@@ -43,7 +43,7 @@ const Headline = styled('div')({
 
 const UserCard = ({ user: { avatar, username, headline, name } }) => {
   return (
-    <Card href={`/users/@${username}`}>
+    <Card href={`/@${username}`}>
       <Avatar src={avatar} />
       <Meta>
         <Name>{name}</Name>

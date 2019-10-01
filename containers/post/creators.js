@@ -21,6 +21,8 @@ const Label = styled('div')(
 );
 
 const CreatorList = styled('div')({
+  maxHeight: 142,
+  overflowY: 'scroll',
   ' > a:first-of-type': {
     marginTop: 0
   },
@@ -43,6 +45,21 @@ const Creators = ({ submitter, creators }) => {
             creators.length > 1 ? 'S' : ''
           }`}</Label>
           <CreatorList>
+            {creators.map(creator => (
+              <UserCard user={creator} />
+            ))}
+            {creators.map(creator => (
+              <UserCard user={creator} />
+            ))}
+            {creators.map(creator => (
+              <UserCard user={creator} />
+            ))}
+            {creators.map(creator => (
+              <UserCard user={creator} />
+            ))}
+            {creators.map(creator => (
+              <UserCard user={creator} />
+            ))}
             {creators.map(creator => (
               <UserCard user={creator} />
             ))}
