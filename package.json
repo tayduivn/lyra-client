@@ -18,7 +18,7 @@
     "apollo-link-context": "^1.0.10",
     "apollo-link-http": "^1.5.7",
     "array-move": "^2.1.0",
-    "auth0-lock": "^11.11.0",
+    "auth0-lock": "^11.26.0",
     "axios": "^0.18.0",
     "babel-plugin-inline-react-svg": "^1.0.1",
     "cookie": "^0.3.1",
